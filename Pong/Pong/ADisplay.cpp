@@ -3,7 +3,7 @@
 ADisplay::ADisplay(const int & width, const int& height)
 {
 	this->display = al_create_display(width, height);
-	Validate::object_was_initialize(this->display, "Display");
+	Validate::object_was_initialized(this->display, "Display");
 }
 
 ADisplay::~ADisplay()

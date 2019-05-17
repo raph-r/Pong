@@ -3,7 +3,7 @@
 ATimer::ATimer(const float& fps)
 {
 	this->timer = al_create_timer(fps);
-	Validate::object_was_initialize(this->timer, "Timer");
+	Validate::object_was_initialized(this->timer, "Timer");
 }
 
 ATimer::~ATimer()

@@ -1,6 +1,6 @@
 #include "Validate.h"
 
-void Validate::object_was_initialize(const bool& result_to_validate, const char* object_name)
+void Validate::object_was_initialized(const bool& result_to_validate, const char* object_name)
 {
 	if (!result_to_validate)
 	{
