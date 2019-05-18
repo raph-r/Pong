@@ -11,4 +11,5 @@ public:
 	ATimer(const float& fps);
 	~ATimer();
 	ALLEGRO_TIMER * getTimer() const;
+	void startTimer();
 };

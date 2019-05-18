@@ -138,12 +138,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ADisplay.cpp" />
+    <ClCompile Include="AEventQueue.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ATimer.cpp" />
     <ClCompile Include="Validate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ADisplay.h" />
+    <ClInclude Include="AEventQueue.h" />
     <ClInclude Include="ATimer.h" />
     <ClInclude Include="Validate.h" />
   </ItemGroup>

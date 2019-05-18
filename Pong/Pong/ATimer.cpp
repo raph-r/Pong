@@ -15,3 +15,8 @@ ALLEGRO_TIMER * ATimer::getTimer() const
 {
 	return this->timer;
 }
+
+void ATimer::startTimer()
+{
+	al_start_timer(this->timer);
+}
