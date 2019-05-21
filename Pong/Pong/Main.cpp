@@ -1,19 +1,13 @@
 #include "ATimer.h"
 #include "ADisplay.h"
 #include "AEventQueue.h"
+#include "Ball.h"
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_primitives.h"
 #include <memory>
 #include <iostream>
 #define KEY_SEEN 1
 #define KEY_RELEASED 2
-#define MARGIN_TOP 10
-#define MARGIN_BOTTON 10
-#define MARGIN_LEFT 30
-#define MARGIN_RIGHT 30
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
-
 
 void draw_field(const int& height_portion, const ALLEGRO_COLOR& ACWhite)
 {
@@ -35,186 +29,6 @@ void draw_field(const int& height_portion, const ALLEGRO_COLOR& ACWhite)
 		);
 	}
 }
-
-struct Block
-{
-	int width = 0;
-	int height = 0;
-
-	Block(const int& width, const int& height)
-	{
-		this->width = width;
-		this->height = height;
-	}
-};
-
-struct Player
-{
-	unsigned int btn_to_up = 0;
-	unsigned int btn_to_down = 0;
-	unsigned int score = 0;
-	int top_left_x = 0;
-	int top_left_y = 0;
-	int width = 0;
-	int height = 0;
-	int initial_position_x = 0;
-	int initial_position_y = 0;
-
-	Player(const int& btn_to_up, const int& btn_to_down, const int& top_left_x, const int& width,const int& height, const int& score)
-	{
-		this->top_left_x = top_left_x;
-		this->top_left_y = (SCREEN_HEIGHT / 2) - (height / 2);
-		this->width = width;
-		this->height = height;
-		this->btn_to_up = btn_to_up;
-		this->btn_to_down = btn_to_down;
-		this->score = score;
-		this->initial_position_x = this->top_left_x;
-		this->initial_position_y = this->top_left_y;
-	}
-
-	void reset_position()
-	{
-		this->top_left_x = this->initial_position_x;
-		this->top_left_y = this->initial_position_y;
-	}
-
-	int horizontal_top_collision_line() const
-	{
-		return this->top_left_y;
-	}
-	int horizontal_botton_collision_line() const
-	{
-		return this->top_left_y + this->height;
-	}
-	int vertical_left_collision_line() const
-	{
-		return this->top_left_x;
-	}
-	int vertical_right_collision_line() const
-	{
-		return this->top_left_x + this->width;
-	}
-};
-
-struct Ball
-{
-	int acceleration_x = 0;
-	int acceleration_y = 0;
-	int width = 0;
-	int height = 0;
-	int top_left_x = 0;
-	int top_left_y = 0;
-	int initial_position_x = 0;
-	int initial_position_y = 0;
-
-	Ball(const int& width, const int& height, const int& top_left_x, const int& top_left_y, const int& acceleration_x, const int& acceleration_y)
-	{
-		this->width = width;
-		this->height = height;
-		this->top_left_x = top_left_x;
-		this->top_left_y = top_left_y;
-		this->acceleration_x = acceleration_x;
-		this->acceleration_y = acceleration_y;
-		initial_position_x = this->top_left_x;
-		initial_position_y = this->top_left_y;
-	}
-
-	void reset_position()
-	{
-		this->top_left_x = this->initial_position_x;
-		this->top_left_y = this->initial_position_y;
-	}
-
-	void move_ball(const int& height_division, const Player * p1, const Player * p2)
-	{
-		if (this->is_collided_left(p1) || this->is_collided_right(p2))
-		{
-			this->change_acceleration_x();
-			this->simple_move();
-		}
-
-		if (this->is_collided_botton(p1) || this->is_collided_botton(p2) || this->is_collided_top(p1) || this->is_collided_top(p2))
-		{
-			this->change_acceleration_y();
-			this->simple_move();
-		}
-		
-		if (this->top_left_y >= SCREEN_HEIGHT - MARGIN_TOP - height_division - this->height || this->top_left_y <= MARGIN_TOP + height_division)
-		{
-			this->change_acceleration_y();
-			this->simple_move();
-		}
-
-		this->simple_move();
-	}
-
-	void change_acceleration_x()
-	{
-		this->acceleration_x *= -1;
-	}
-
-	void change_acceleration_y()
-	{
-		this->acceleration_y *= -1;
-	}
-
-	void simple_move()
-	{
-		this->top_left_y += this->acceleration_y;
-		this->top_left_x += this->acceleration_x;
-	}
-
-	bool is_collided_top(const Player * player)
-	{
-		if (this->top_left_y <= player->horizontal_botton_collision_line() && this->top_left_y + this->height >= player->horizontal_botton_collision_line())
-		{
-			return this->is_between_vertical_range(player);
-		}
-		return false;
-	}
-
-	bool is_collided_botton(const Player * player)
-	{
-		if (this->top_left_y <= player->horizontal_top_collision_line() && this->top_left_y + this->height >= player->horizontal_top_collision_line())
-		{
-			return this->is_between_vertical_range(player);
-		}
-		return false;
-	}
-
-	bool is_collided_left(const Player * player)
-	{
-		if (this->top_left_x <= player->vertical_right_collision_line() && this->top_left_x + this->width >= player->vertical_right_collision_line())
-		{
-			return this->is_between_horizontal_range(player);
-		}
-		return false;
-	}
-
-	bool is_collided_right(const Player * player)
-	{
-		if (this->top_left_x <= player->vertical_left_collision_line() && this->top_left_x + this->width >= player->vertical_left_collision_line())
-		{
-			return this->is_between_horizontal_range(player);
-		}
-		return false;
-	}
-
-	bool is_between_vertical_range(const Player * player)
-	{
-		return (this->top_left_x <= player->vertical_left_collision_line() && this->top_left_x + width >= player->vertical_left_collision_line())
-			|| (this->top_left_x >= player->vertical_left_collision_line() && this->top_left_x + this->width <= player->vertical_right_collision_line())
-			|| (this->top_left_x <= player->vertical_right_collision_line() && this->top_left_x + width >= player->vertical_right_collision_line());
-	}
-
-	bool is_between_horizontal_range(const Player * player)
-	{
-		return (this->top_left_y <= player->horizontal_top_collision_line() && this->top_left_y + this->height >= player->horizontal_top_collision_line())
-			|| (this->top_left_y >= player->horizontal_top_collision_line() && this->top_left_y + this->height <= player->horizontal_botton_collision_line())
-			|| (this->top_left_y <= player->horizontal_botton_collision_line() && this->top_left_y + this->height >= player->horizontal_botton_collision_line());
-	}
-};
 
 int main(int argn, char** argv)
 {
@@ -268,23 +82,23 @@ int main(int argn, char** argv)
 			case ALLEGRO_EVENT_TIMER:
 
 				// move player 1			
-				if (key[ALLEGRO_KEY_W] && p1.top_left_y > height_division) // limite superior
+				if (key[ALLEGRO_KEY_W] && p1.top_collision_line() > height_division) // limite superior
 				{
-					p1.top_left_y -= 4;
+					p1.up();
 				}
-				if (key[ALLEGRO_KEY_S] && p1.top_left_y < (SCREEN_HEIGHT - p1.height - height_division)) // limite inferior
+				if (key[ALLEGRO_KEY_S] && p1.botton_collision_line() < (SCREEN_HEIGHT - height_division)) // limite inferior
 				{
-					p1.top_left_y += 4;
+					p1.down();
 				}
 
 				// move player 2
-				if (key[ALLEGRO_KEY_UP] && p2.top_left_y > height_division) // limite superior
+				if (key[ALLEGRO_KEY_UP] && p2.top_collision_line() > height_division) // limite superior
 				{
-					p2.top_left_y -= 4;
+					p2.up();
 				}
-				if (key[ALLEGRO_KEY_DOWN] && p2.top_left_y < (SCREEN_HEIGHT - p2.height - height_division)) // limite inferior
+				if (key[ALLEGRO_KEY_DOWN] && p2.botton_collision_line() < (SCREEN_HEIGHT - height_division)) // limite inferior
 				{
-					p2.top_left_y += 4;
+					p2.down();
 				}
 
 				// exit game
@@ -313,15 +127,15 @@ int main(int argn, char** argv)
 		}
 		
 		//player 1 gol
-		if (ball.top_left_x >= p2.vertical_right_collision_line())
+		if (ball.right_collision_line() >= p2.right_collision_line())
 		{
-			p1.score++;
+			p1.add_score();
 			reset_objects_position = true;
 		}
 		//player 2 gol
-		else if (ball.top_left_x + ball.width <= p1.vertical_left_collision_line())
+		else if (ball.left_collision_line() <= p1.left_collision_line())
 		{
-			p2.score++;
+			p2.add_score();
 			reset_objects_position = true;
 		}
 
@@ -341,33 +155,33 @@ int main(int argn, char** argv)
 			
 			// draw player1 (left player)
 			al_draw_filled_rectangle(
-				p1.top_left_x,
-				p1.top_left_y,
-				p1.top_left_x + p1.width,
-				p1.top_left_y + p1.height,
+				p1.left_collision_line(),
+				p1.top_collision_line(),
+				p1.right_collision_line(),
+				p1.botton_collision_line(),
 				ACWhite
 			);
 
 			//draw player2 (right player)
 			al_draw_filled_rectangle(
-				p2.top_left_x,
-				p2.top_left_y,
-				p2.top_left_x + p2.width,
-				p2.top_left_y + p2.height,
+				p2.left_collision_line(),
+				p2.top_collision_line(),
+				p2.right_collision_line(),
+				p2.botton_collision_line(),
 				ACWhite
 			);
 
 			//draw ball
 			ball.move_ball(height_division, &p1, &p2);
 			al_draw_filled_rectangle(
-				ball.top_left_x,
-				ball.top_left_y,
-				ball.top_left_x + ball.width, 
-				ball.top_left_y + ball.height,
+				ball.left_collision_line(),
+				ball.top_collision_line(),
+				ball.right_collision_line(),
+				ball.botton_collision_line(),
 				ACWhite
 			);
 
-			al_draw_textf(font, ACWhite, 2, 2, 0, "Player 1:%u - Player 2:%u", p1.score, p2.score);
+			al_draw_textf(font, ACWhite, 2, 2, 0, "Player 1:%u - Player 2:%u", p1.get_score(), p2.get_score());
 			
 			draw_field(height_division, ACWhite);
 			al_flip_display();
