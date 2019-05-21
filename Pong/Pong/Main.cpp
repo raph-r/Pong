@@ -15,21 +15,21 @@
 #define SCREEN_HEIGHT 480
 
 
-void draw_field(const int& screen_width, const int& screen_height, const int& height_portion, const ALLEGRO_COLOR& ACWhite)
+void draw_field(const int& height_portion, const ALLEGRO_COLOR& ACWhite)
 {
 	//draw top line
-	al_draw_filled_rectangle(0, MARGIN_TOP + 1, screen_width, height_portion + 1, ACWhite);
+	al_draw_filled_rectangle(0, MARGIN_TOP + 1, SCREEN_WIDTH, height_portion + 1, ACWhite);
 
 	//draw botton line
-	al_draw_filled_rectangle(0, screen_height - height_portion - 1, screen_width, screen_height - MARGIN_BOTTON - 1, ACWhite);
+	al_draw_filled_rectangle(0, SCREEN_HEIGHT - height_portion - 1, SCREEN_WIDTH, SCREEN_HEIGHT - MARGIN_BOTTON - 1, ACWhite);
 
 	//draw division line
 	for (unsigned int i = 1; i < 19; i++)
 	{
 		al_draw_filled_rectangle(
-			(screen_width / 2) - 2,
+			(SCREEN_WIDTH / 2) - 2,
 			MARGIN_TOP + MARGIN_BOTTON + (i * height_portion),
-			(screen_width / 2) + 2,
+			(SCREEN_WIDTH / 2) + 2,
 			MARGIN_TOP + MARGIN_BOTTON + ((i++) * height_portion),
 			ACWhite
 		);
@@ -250,13 +250,7 @@ int main(int argn, char** argv)
 	Player p1(ALLEGRO_KEY_W, ALLEGRO_KEY_S, MARGIN_LEFT + 1, 10, 60, 0);
 	Player p2(ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, SCREEN_WIDTH - MARGIN_RIGHT - 10 - 1, 10, 60, 0);
 
-	//collision lines
-	int gol_collision_line_p1 = 1;
-	int gol_collision_line_p2 = SCREEN_WIDTH - 1;
-
-	bool reset = false;
-	bool is_gol_from_p1 = false;
-	bool is_gol_from_p2 = false;
+	bool reset_objects_position = false;
 
 	ALLEGRO_EVENT event;
 	bool draw = false;
@@ -273,26 +267,27 @@ int main(int argn, char** argv)
 		{
 			case ALLEGRO_EVENT_TIMER:
 
-				//player 1			
-				if (key[ALLEGRO_KEY_W] && p1.top_left_y > height_division) // linha superior. Tirar do hardcode
+				// move player 1			
+				if (key[ALLEGRO_KEY_W] && p1.top_left_y > height_division) // limite superior
 				{
 					p1.top_left_y -= 4;
 				}
-				if (key[ALLEGRO_KEY_S] && p1.top_left_y < (SCREEN_HEIGHT - p1.height - height_division)) //tamanho obj - linha inferior
+				if (key[ALLEGRO_KEY_S] && p1.top_left_y < (SCREEN_HEIGHT - p1.height - height_division)) // limite inferior
 				{
 					p1.top_left_y += 4;
 				}
 
-				////player 2
-				if (key[ALLEGRO_KEY_UP] && p2.top_left_y > height_division) // linha superior. Tirar do hardcode
+				// move player 2
+				if (key[ALLEGRO_KEY_UP] && p2.top_left_y > height_division) // limite superior
 				{
 					p2.top_left_y -= 4;
 				}
-				if (key[ALLEGRO_KEY_DOWN] && p2.top_left_y < (SCREEN_HEIGHT - p2.height - height_division)) //tamanho obj - linha inferior
+				if (key[ALLEGRO_KEY_DOWN] && p2.top_left_y < (SCREEN_HEIGHT - p2.height - height_division)) // limite inferior
 				{
 					p2.top_left_y += 4;
 				}
 
+				// exit game
 				if (key[ALLEGRO_KEY_ESCAPE])
 				{
 					continue_to_play = false;
@@ -318,25 +313,25 @@ int main(int argn, char** argv)
 		}
 		
 		//player 1 gol
-		if (ball.top_left_x + ball.width >= gol_collision_line_p2)
+		if (ball.top_left_x >= p2.vertical_right_collision_line())
 		{
 			p1.score++;
-			reset = true;
+			reset_objects_position = true;
 		}
 		//player 2 gol
-		else if (ball.top_left_x <= gol_collision_line_p1)
+		else if (ball.top_left_x + ball.width <= p1.vertical_left_collision_line())
 		{
 			p2.score++;
-			reset = true;
+			reset_objects_position = true;
 		}
 
-		if (reset)
+		if (reset_objects_position)
 		{
 			p1.reset_position();
 			p2.reset_position();
 			ball.reset_position();
 			ball.change_acceleration_y();
-			reset = false;
+			reset_objects_position = false;
 		}
 
 		if (draw && al_is_event_queue_empty(UPAEventQueue->getEventQueue()))
@@ -374,12 +369,10 @@ int main(int argn, char** argv)
 
 			al_draw_textf(font, ACWhite, 2, 2, 0, "Player 1:%u - Player 2:%u", p1.score, p2.score);
 			
-
-			draw_field(SCREEN_WIDTH, SCREEN_HEIGHT, height_division, ACWhite);
+			draw_field(height_division, ACWhite);
 			al_flip_display();
 		}
 	}
 	al_destroy_font(font);
 	return 0;
 }
-
