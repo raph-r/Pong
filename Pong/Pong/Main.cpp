@@ -6,6 +6,7 @@
 #include "allegro5/allegro_primitives.h"
 #include <memory>
 #include <iostream>
+#include "OMPlayer.h"
 #define KEY_SEEN 1
 #define KEY_RELEASED 2
 
@@ -63,6 +64,9 @@ int main(int argn, char** argv)
 	//Players 
 	Player p1(ALLEGRO_KEY_W, ALLEGRO_KEY_S, MARGIN_LEFT + 1, 10, 60, 0);
 	Player p2(ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, SCREEN_WIDTH - MARGIN_RIGHT - 10 - 1, 10, 60, 0);
+
+	
+	//OMPlayer p1(MARGIN_LEFT + 1, (SCREEN_HEIGHT / 2) - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_W, ALLEGRO_KEY_S);
 
 	bool reset_objects_position = false;
 
