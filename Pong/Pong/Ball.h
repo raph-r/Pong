@@ -1,6 +1,11 @@
 #pragma once
-#include "Player.h"
 #include "OMPlayer.h"
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
+#define MARGIN_TOP 10
+#define MARGIN_BOTTON 10
+#define MARGIN_LEFT 30
+#define MARGIN_RIGHT 30
 
 class Ball
 {

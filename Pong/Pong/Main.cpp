@@ -1,15 +1,20 @@
 #include "ATimer.h"
 #include "ADisplay.h"
 #include "AEventQueue.h"
-#include "Ball.h"
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_primitives.h"
 #include <memory>
 #include <iostream>
 #include "OMPlayer.h"
+#include "OMBall.h"
 #define KEY_SEEN 1
 #define KEY_RELEASED 2
-
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
+#define MARGIN_TOP 10
+#define MARGIN_BOTTON 10
+#define MARGIN_LEFT 30
+#define MARGIN_RIGHT 30
 
 void draw_field(const int& height_portion, const ALLEGRO_COLOR& ACWhite)
 {
@@ -39,7 +44,8 @@ int main(int argn, char** argv)
 	// partição da altura da tela
 	int height_division = (SCREEN_HEIGHT - (MARGIN_TOP + MARGIN_BOTTON)) / 20;
 
-	Ball ball(10, 10, ((SCREEN_WIDTH / 2) - 5), ((SCREEN_HEIGHT / 2)) - 5, 3, 3);
+	//Ball ball(10, 10, ((SCREEN_WIDTH / 2) - 5), ((SCREEN_HEIGHT / 2)) - 5, 3, 3);
+	OMBall ball(((SCREEN_WIDTH / 2) - 5), ((SCREEN_HEIGHT / 2)) - 5, 10, 10, 3, 3);
 
 	//Inicializa os objetos basicos da allegro
 	Validate::object_was_initialized(al_init(), "Allegro");
@@ -65,6 +71,8 @@ int main(int argn, char** argv)
 	//Players 
 	OMPlayer p1(MARGIN_LEFT + 1, (SCREEN_HEIGHT / 2) - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_W, ALLEGRO_KEY_S);
 	OMPlayer p2(SCREEN_WIDTH - MARGIN_RIGHT - 1, (SCREEN_HEIGHT / 2) - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN);
+	Object limit_top(0, MARGIN_TOP + 1, SCREEN_WIDTH, height_division + 1);
+	Object limit_botton(0, SCREEN_HEIGHT - height_division - 1, SCREEN_WIDTH, SCREEN_HEIGHT - MARGIN_BOTTON - 1);
 
 	bool reset_objects_position = false;
 
@@ -146,7 +154,7 @@ int main(int argn, char** argv)
 			p1.reset_position();
 			p2.reset_position();
 			ball.reset_position();
-			ball.change_acceleration_y();
+			ball.reverse_acceleration_y();
 			reset_objects_position = false;
 		}
 
@@ -174,7 +182,7 @@ int main(int argn, char** argv)
 			);
 
 			//draw ball
-			ball.move_ball(height_division, &p1, &p2);
+			ball.move_ball(&p1, &p2, &limit_top, &limit_botton);
 			al_draw_filled_rectangle(
 				ball.left_collision_line(),
 				ball.top_collision_line(),
