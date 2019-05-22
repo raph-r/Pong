@@ -145,7 +145,6 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="OMovable.cpp" />
     <ClCompile Include="OMPlayer.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Validate.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,7 +155,6 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="OMovable.h" />
     <ClInclude Include="OMPlayer.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="Validate.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
