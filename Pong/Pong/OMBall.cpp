@@ -61,25 +61,58 @@ void OMBall::move_ball()
 	this->right();
 }
 
-void OMBall::move_ball(const OMPlayer * p1, const OMPlayer * p2, const Object * limit_top, const Object * limit_botton)
+void OMBall::move_ball(OMPlayer * const p1, OMPlayer * const p2, const Object * limit_top, const Object * limit_botton)
 {
 	if (this->is_player_collided_left(p1) || this->is_player_collided_right(p2))
 	{
+		this->try_increase_speed(p1, p2);
 		this->reverse_acceleration_x();
 		this->move_ball();
 	}
 
-	if (this->is_player_collided_botton(p1) || this->is_player_collided_botton(p2) || this->is_player_collided_top(p1) || this->is_player_collided_top(p2))
+	
+	if (this->is_player_collided_botton(p1) || this->is_player_collided_botton(p2) || this->is_player_collided_top(p1) || this->is_player_collided_top(p2) // player collision
+		|| this->collision_line_botton() >= limit_botton->collision_line_top() || this->collision_line_top() <= limit_top->collision_line_botton()) // limit collision
 	{
+		this->try_increase_speed(p1, p2);
 		this->reverse_acceleration_y();
 		this->move_ball();
 	}
 	
-	if (this->top_left_y >= limit_botton->collision_line_top() || this->top_left_y <= limit_top->collision_line_botton())
-	{
-		this->reverse_acceleration_y();
-		this->move_ball();
-	}
-
 	this->move_ball();
+}
+
+void OMBall::try_increase_speed(OMPlayer * const p1, OMPlayer * const p2)
+{
+	if (++this->hits >= 4)
+	{
+		if (this->acceleration_x > 0)
+		{
+			this->add_acceleration_x();
+		}
+		else
+		{
+			this->subtract_acceleration_x();
+		}
+
+		if (this->acceleration_y > 0)
+		{
+			this->add_acceleration_y();
+		}
+		else
+		{
+			this->subtract_acceleration_y();
+		}
+		this->hits = 0;
+		
+		// add player acceleration
+		p1->add_acceleration_y();
+		p2->add_acceleration_y();
+	}
+}
+
+void OMBall::reset_position()
+{
+	OMovable::reset_position();
+	this->hits = 0;
 }

@@ -19,7 +19,7 @@
 #define HALF_HEIGHT (SCREEN_HEIGHT / 2)
 #define HALF_WIDTH (SCREEN_WIDTH / 2)
 
-void draw_field(const OMPlayer * p1, const OMPlayer * p2, OMBall * const ball, const Object * limit_top, const Object * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_COLOR& ACBlack, const ALLEGRO_FONT * font)
+void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, const Object * limit_top, const Object * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_COLOR& ACBlack, const ALLEGRO_FONT * font)
 {
 	al_clear_to_color(ACBlack);
 

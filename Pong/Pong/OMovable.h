@@ -8,6 +8,8 @@ protected:
 	int acceleration_y = 0;
 	int initial_position_x = 0;
 	int initial_position_y = 0;
+	int initial_acceleration_x = 0;
+	int initial_acceleration_y = 0;
 public:
 	OMovable(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const int& acceleration_x, const int& acceleration_y);
 	~OMovable();
@@ -17,6 +19,11 @@ public:
 	void down();
 	void right();
 	void left();
-	void reset_position();
+	void add_acceleration_x();
+	void add_acceleration_y();
+	void subtract_acceleration_x();
+	void subtract_acceleration_y();
+	virtual void reset_position();
+
 };
 

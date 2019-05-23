@@ -7,6 +7,8 @@ OMovable::OMovable(const int& top_left_x, const int& top_left_y, const int& widt
 	this->acceleration_y = std::move(acceleration_y);
 	this->initial_position_x = this->top_left_x;
 	this->initial_position_y = this->top_left_y;
+	this->initial_acceleration_x = this->acceleration_x;
+	this->initial_acceleration_y = this->acceleration_y;
 }
 
 OMovable::~OMovable(){}
@@ -45,4 +47,26 @@ void OMovable::reset_position()
 {
 	this->top_left_x = this->initial_position_x;
 	this->top_left_y = this->initial_position_y;
+	this->acceleration_x = this->initial_acceleration_x;
+	this->acceleration_y = this->initial_acceleration_y;
+}
+
+void OMovable::add_acceleration_x()
+{
+	this->acceleration_x++;
+}
+
+void OMovable::add_acceleration_y()
+{
+	this->acceleration_y++;
+}
+
+void OMovable::subtract_acceleration_x()
+{
+	this->acceleration_x--;
+}
+
+void OMovable::subtract_acceleration_y()
+{
+	this->acceleration_y--;
 }
