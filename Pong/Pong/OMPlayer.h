@@ -13,6 +13,7 @@ public:
 	~OMPlayer();
 
 	void add_score();
-	int get_score();
+	int get_score() const;
+	void move_player(const unsigned char * keys, const Object * limit_top, const Object * limit_botton);
 };
 

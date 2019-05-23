@@ -12,8 +12,8 @@ protected:
 public:
 	Object(const int& top_left_x, const int& top_left_y, const int& width, const int& height);
 	~Object();
-	int top_collision_line() const;
-	int botton_collision_line() const;
-	int left_collision_line() const;
-	int right_collision_line() const;
+	int collision_line_top() const;
+	int collision_line_botton() const;
+	int collision_line_left() const;
+	int collision_line_right() const;
 };

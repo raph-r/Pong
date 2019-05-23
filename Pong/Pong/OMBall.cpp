@@ -7,7 +7,7 @@ OMBall::~OMBall(){}
 
 bool OMBall::is_player_collided_top(const OMPlayer * player)
 {
-	if (this->top_left_y <= player->botton_collision_line() && this->top_left_y + this->height >= player->botton_collision_line())
+	if (this->top_left_y <= player->collision_line_botton() && this->top_left_y + this->height >= player->collision_line_botton())
 	{
 		return this->is_player_between_vertical_range(player);
 	}
@@ -16,7 +16,7 @@ bool OMBall::is_player_collided_top(const OMPlayer * player)
 
 bool OMBall::is_player_collided_botton(const OMPlayer * player)
 {
-	if (this->top_left_y <= player->top_collision_line() && this->top_left_y + this->height >= player->top_collision_line())
+	if (this->top_left_y <= player->collision_line_top() && this->top_left_y + this->height >= player->collision_line_top())
 	{
 		return this->is_player_between_vertical_range(player);
 	}
@@ -25,7 +25,7 @@ bool OMBall::is_player_collided_botton(const OMPlayer * player)
 
 bool OMBall::is_player_collided_left(const OMPlayer * player)
 {
-	if (this->top_left_x <= player->right_collision_line() && this->top_left_x + this->width >= player->right_collision_line())
+	if (this->top_left_x <= player->collision_line_right() && this->top_left_x + this->width >= player->collision_line_right())
 	{
 		return this->is_player_between_horizontal_range(player);
 	}
@@ -34,7 +34,7 @@ bool OMBall::is_player_collided_left(const OMPlayer * player)
 
 bool OMBall::is_player_collided_right(const OMPlayer * player)
 {
-	if (this->top_left_x <= player->left_collision_line() && this->top_left_x + this->width >= player->left_collision_line())
+	if (this->top_left_x <= player->collision_line_left() && this->top_left_x + this->width >= player->collision_line_left())
 	{
 		return this->is_player_between_horizontal_range(player);
 	}
@@ -43,16 +43,16 @@ bool OMBall::is_player_collided_right(const OMPlayer * player)
 
 bool OMBall::is_player_between_vertical_range(const OMPlayer * player)
 {
-	return (this->top_left_x <= player->left_collision_line() && this->top_left_x + width >= player->left_collision_line())
-		|| (this->top_left_x >= player->left_collision_line() && this->top_left_x + this->width <= player->right_collision_line())
-		|| (this->top_left_x <= player->right_collision_line() && this->top_left_x + width >= player->right_collision_line());
+	return (this->top_left_x <= player->collision_line_left() && this->top_left_x + width >= player->collision_line_left())
+		|| (this->top_left_x >= player->collision_line_left() && this->top_left_x + this->width <= player->collision_line_right())
+		|| (this->top_left_x <= player->collision_line_right() && this->top_left_x + width >= player->collision_line_right());
 }
 
 bool OMBall::is_player_between_horizontal_range(const OMPlayer * player)
 {
-	return (this->top_left_y <= player->top_collision_line() && this->top_left_y + this->height >= player->top_collision_line())
-		|| (this->top_left_y >= player->top_collision_line() && this->top_left_y + this->height <= player->botton_collision_line())
-		|| (this->top_left_y <= player->botton_collision_line() && this->top_left_y + this->height >= player->botton_collision_line());
+	return (this->top_left_y <= player->collision_line_top() && this->top_left_y + this->height >= player->collision_line_top())
+		|| (this->top_left_y >= player->collision_line_top() && this->top_left_y + this->height <= player->collision_line_botton())
+		|| (this->top_left_y <= player->collision_line_botton() && this->top_left_y + this->height >= player->collision_line_botton());
 }
 
 void OMBall::move_ball()
@@ -75,7 +75,7 @@ void OMBall::move_ball(const OMPlayer * p1, const OMPlayer * p2, const Object * 
 		this->move_ball();
 	}
 	
-	if (this->top_left_y >= limit_botton->top_collision_line() || this->top_left_y <= limit_top->botton_collision_line())
+	if (this->top_left_y >= limit_botton->collision_line_top() || this->top_left_y <= limit_top->collision_line_botton())
 	{
 		this->reverse_acceleration_y();
 		this->move_ball();

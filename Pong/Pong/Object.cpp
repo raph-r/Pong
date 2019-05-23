@@ -10,22 +10,22 @@ Object::Object(const int& top_left_x, const int& top_left_y, const int& width, c
 
 Object::~Object(){}
 
-int Object::top_collision_line() const
+int Object::collision_line_top() const
 {
 	return this->top_left_y;
 }
 
-int Object::botton_collision_line() const
+int Object::collision_line_botton() const
 {
 	return this->top_left_y + this->height;
 }
 
-int Object::left_collision_line() const
+int Object::collision_line_left() const
 {
 	return this->top_left_x;
 }
 
-int Object::right_collision_line() const
+int Object::collision_line_right() const
 {
 	return this->top_left_x + this->width;
 }
