@@ -18,8 +18,23 @@
 #define HEIGHT_DIVISION ((SCREEN_HEIGHT - (MARGIN_TOP + MARGIN_BOTTON)) / 20)
 #define HALF_HEIGHT (SCREEN_HEIGHT / 2)
 #define HALF_WIDTH (SCREEN_WIDTH / 2)
+#define MAX_SCORE 10
 
-void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, const Object * limit_top, const Object * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_COLOR& ACBlack, const ALLEGRO_FONT * font)
+OMPlayer const * has_winner(OMPlayer * const p1, OMPlayer * const p2)
+{
+	if (p1->get_score() >= MAX_SCORE)
+	{
+		return p1;
+	}
+
+	if (p2->get_score() >= MAX_SCORE)
+	{
+		return p2;
+	}
+	return nullptr;
+}
+
+void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, const Object * limit_top, const Object * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_COLOR& ACBlack, const ALLEGRO_FONT * font, bool& has_winner)
 {
 	al_clear_to_color(ACBlack);
 
@@ -42,11 +57,29 @@ void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, c
 	al_draw_filled_rectangle(p2->collision_line_left(), p2->collision_line_top(), p2->collision_line_right(), p2->collision_line_botton(), ACWhite);
 
 	// move and draw ball
-	ball->move_ball(p1, p2, limit_top, limit_botton);
+	if(!has_winner)
+	{
+		ball->move_ball(p1, p2, limit_top, limit_botton);
+	}
+	
 	al_draw_filled_rectangle(ball->collision_line_left(), ball->collision_line_top(), ball->collision_line_right(), ball->collision_line_botton(), ACWhite);
 
 	// draw game score
-	al_draw_textf(font, ACWhite, 2, 2, 0, "Player 1:%u - Player 2:%u", p1->get_score(), p2->get_score());
+	al_draw_textf(font, ACWhite, 2, 2, 0, "%s:%u - %s:%u", p1->get_name(), p1->get_score(), p2->get_name(), p2->get_score());
+
+	if (p1->get_score() >= MAX_SCORE)
+	{
+		int text_size = al_get_text_width(font, "Player 1 Win!!!");
+		al_draw_textf(font, ACWhite, (HALF_WIDTH / 2) - (text_size / 2), (HALF_HEIGHT / 2) - MARGIN_LEFT, 0, "Player 1 Win!!!");
+		has_winner = true;
+	}
+
+	if (p2->get_score() >= MAX_SCORE)
+	{
+		int text_size = al_get_text_width(font, "Player 2 Win!!!");
+		al_draw_textf(font, ACWhite, (HALF_WIDTH + (HALF_WIDTH / 2)) - (text_size / 2), (HALF_HEIGHT / 2) - MARGIN_LEFT, 0, "Player 2 Win!!!");
+		has_winner = true;
+	}
 }
 
 bool update_score(const OMBall * ball, OMPlayer * const p1, OMPlayer * const p2)
@@ -70,6 +103,7 @@ int main(int argn, char** argv)
 {
 	bool continue_to_play = true;
 	bool draw = false;
+	bool has_winner = false;
 
 	// Initialize the basics objects of Allegro
 	Validate::object_was_initialized(al_init(), "Allegro");
@@ -93,15 +127,15 @@ int main(int argn, char** argv)
 	ALLEGRO_COLOR ACWhite = al_map_rgba_f(1, 1, 1, 1);
 
 	//Players 
-	OMPlayer p1(MARGIN_LEFT + 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_W, ALLEGRO_KEY_S);
-	OMPlayer p2(SCREEN_WIDTH - MARGIN_RIGHT - 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN);
+	OMPlayer p1(MARGIN_LEFT + 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_W, ALLEGRO_KEY_S, "Player 1");
+	OMPlayer p2(SCREEN_WIDTH - MARGIN_RIGHT - 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, "Player 2");
 
 	//ball
-	OMBall ball(HALF_WIDTH - 5, HALF_HEIGHT - 5, 10, 10, 3, 3);
+	OMBall ball(HALF_WIDTH - 5, HALF_HEIGHT - 5, 10, 10, 3, 3, "Ball");
 
 	//limits
-	Object limit_top(0, MARGIN_TOP + 1, SCREEN_WIDTH, HEIGHT_DIVISION);
-	Object limit_botton(0, SCREEN_HEIGHT - HEIGHT_DIVISION - MARGIN_BOTTON - 1, SCREEN_WIDTH, HEIGHT_DIVISION);
+	Object limit_top(0, MARGIN_TOP + 1, SCREEN_WIDTH, HEIGHT_DIVISION, "Limit Top");
+	Object limit_botton(0, SCREEN_HEIGHT - HEIGHT_DIVISION - MARGIN_BOTTON - 1, SCREEN_WIDTH, HEIGHT_DIVISION, "Limit Botton");
 
 	//captures the current event
 	ALLEGRO_EVENT event;
@@ -109,7 +143,7 @@ int main(int argn, char** argv)
 	//user input
 	unsigned char key[ALLEGRO_KEY_MAX];
 	memset(key, 0, sizeof(key));
-	
+
 	UPATimer->startTimer();
 	while (continue_to_play)
 	{
@@ -119,8 +153,11 @@ int main(int argn, char** argv)
 		{
 			case ALLEGRO_EVENT_TIMER:
 				// Move players
-				p1.move_player(key, &limit_top, &limit_botton);
-				p2.move_player(key, &limit_top, &limit_botton);
+				if (!has_winner)
+				{
+					p1.move_player(key, &limit_top, &limit_botton);
+					p2.move_player(key, &limit_top, &limit_botton);
+				}
 
 				// Exist Game
 				if (key[ALLEGRO_KEY_ESCAPE])
@@ -153,13 +190,12 @@ int main(int argn, char** argv)
 			p1.reset_position();
 			p2.reset_position();
 			ball.reset_position();
-			ball.reverse_acceleration_y();
 		}
 
 		if (draw && al_is_event_queue_empty(UPAEventQueue->getEventQueue()))
 		{
 			draw = false;
-			draw_field(&p1, &p2, &ball, &limit_top, &limit_botton, ACWhite, ACBlack, font);
+			draw_field(&p1, &p2, &ball, &limit_top, &limit_botton, ACWhite, ACBlack, font, has_winner);
 			al_flip_display();
 		}
 	}

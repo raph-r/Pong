@@ -1,7 +1,7 @@
 #include "OMBall.h"
 
-OMBall::OMBall(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const int& acceleration_x, const int& acceleration_y)
-	:OMovable(top_left_x, top_left_y, width, height, acceleration_x, acceleration_y){}
+OMBall::OMBall(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const int& acceleration_x, const int& acceleration_y, const char * name)
+	:OMovable(top_left_x, top_left_y, width, height, acceleration_x, acceleration_y, name){}
 
 OMBall::~OMBall(){}
 
@@ -113,6 +113,17 @@ void OMBall::try_increase_speed(OMPlayer * const p1, OMPlayer * const p2)
 
 void OMBall::reset_position()
 {
-	OMovable::reset_position();
 	this->hits = 0;
+	this->top_left_x = this->initial_position_x;
+	this->top_left_y = this->initial_position_y;
+	this->acceleration_y = this->initial_acceleration_y;
+
+	if ((this->acceleration_x > 0 && this->initial_acceleration_x > 0) || (this->acceleration_x < 0 && this->initial_acceleration_x < 0))
+	{
+		this->acceleration_x = this->initial_acceleration_x;
+	}
+	else 
+	{
+		this->acceleration_x = (this->initial_acceleration_x * -1);
+	}
 }
