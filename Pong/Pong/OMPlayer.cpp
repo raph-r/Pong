@@ -30,3 +30,8 @@ void OMPlayer::move_player(const unsigned char * keys, const Object * limit_top,
 		this->down();
 	}
 }
+
+void OMPlayer::reset_score()
+{
+	this->score = 0;
+}

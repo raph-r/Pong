@@ -7,6 +7,7 @@
 #include <iostream>
 #include "OMPlayer.h"
 #include "OMBall.h"
+#include <string>
 #define KEY_SEEN 1
 #define KEY_RELEASED 2
 #define SCREEN_WIDTH 640
@@ -19,19 +20,22 @@
 #define HALF_HEIGHT (SCREEN_HEIGHT / 2)
 #define HALF_WIDTH (SCREEN_WIDTH / 2)
 #define MAX_SCORE 10
+#define PRESS_ENTER "Press Space to play again!"
 
-OMPlayer const * has_winner(OMPlayer * const p1, OMPlayer * const p2)
+void draw_player_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, const int& msg_top_x, const char * const winner_msg)
 {
-	if (p1->get_score() >= MAX_SCORE)
-	{
-		return p1;
-	}
+	al_draw_text(font, ACWhite, msg_top_x, (HALF_HEIGHT / 2) - MARGIN_LEFT, 0, winner_msg);
+}
 
-	if (p2->get_score() >= MAX_SCORE)
-	{
-		return p2;
-	}
-	return nullptr;
+void draw_press_key_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, const int& msg_top_x)
+{
+	al_draw_text(font, ACWhite, msg_top_x, (HALF_HEIGHT / 2) - MARGIN_LEFT + (al_get_font_line_height(font) * 2), 0, PRESS_ENTER);
+}
+
+void draw_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, const int& half_width_of_winner_side, const char * const winner_msg)
+{
+	draw_player_winner_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, winner_msg) / 2), winner_msg);
+	draw_press_key_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, PRESS_ENTER) / 2));
 }
 
 void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, const Object * limit_top, const Object * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_COLOR& ACBlack, const ALLEGRO_FONT * font, bool& has_winner)
@@ -69,15 +73,13 @@ void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, c
 
 	if (p1->get_score() >= MAX_SCORE)
 	{
-		int text_size = al_get_text_width(font, "Player 1 Win!!!");
-		al_draw_textf(font, ACWhite, (HALF_WIDTH / 2) - (text_size / 2), (HALF_HEIGHT / 2) - MARGIN_LEFT, 0, "Player 1 Win!!!");
+		draw_winner_msg(ACWhite, font, (HALF_WIDTH / 2), "Player 1 Win!!!");
 		has_winner = true;
 	}
 
 	if (p2->get_score() >= MAX_SCORE)
 	{
-		int text_size = al_get_text_width(font, "Player 2 Win!!!");
-		al_draw_textf(font, ACWhite, (HALF_WIDTH + (HALF_WIDTH / 2)) - (text_size / 2), (HALF_HEIGHT / 2) - MARGIN_LEFT, 0, "Player 2 Win!!!");
+		draw_winner_msg(ACWhite, font, (HALF_WIDTH + (HALF_WIDTH / 2)), "Player 2 Win!!!");
 		has_winner = true;
 	}
 }
@@ -165,12 +167,22 @@ int main(int argn, char** argv)
 					continue_to_play = false;
 				}
 
+				// reload game, if it has a winner and space bar is pressed
+				if (has_winner && key[ALLEGRO_KEY_SPACE])
+				{
+					has_winner = false;
+					p1.reset_score();
+					p2.reset_score();
+					ball.reverse_acceleration_x();
+				}
+
 				// Reset array of keys
 				for (unsigned int i = 0; i < ALLEGRO_KEY_MAX; i++)
 				{
 					key[i] &= KEY_SEEN;
 				}
 				draw = true;
+				
 				break;
 			case ALLEGRO_EVENT_KEY_DOWN:
 				key[event.keyboard.keycode] = KEY_SEEN | KEY_RELEASED;

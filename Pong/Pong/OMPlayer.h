@@ -14,6 +14,7 @@ public:
 
 	void add_score();
 	int get_score() const;
+	void reset_score();
 	void move_player(const unsigned char * keys, const Object * limit_top, const Object * limit_botton);
 };
 
