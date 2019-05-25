@@ -4,10 +4,8 @@
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_primitives.h"
 #include <memory>
-#include <iostream>
 #include "OMPlayer.h"
 #include "OMBall.h"
-#include <string>
 #define KEY_SEEN 1
 #define KEY_RELEASED 2
 #define SCREEN_WIDTH 640
@@ -20,7 +18,8 @@
 #define HALF_HEIGHT (SCREEN_HEIGHT / 2)
 #define HALF_WIDTH (SCREEN_WIDTH / 2)
 #define MAX_SCORE 10
-#define PRESS_ENTER "Press Space to play again!"
+#define MSG_PLAY_AGAIN "Press Space to play again!"
+#define MSG_PLAY_GAME "Press Space to play"
 
 void draw_player_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, const int& msg_top_x, const char * const winner_msg)
 {
@@ -29,19 +28,17 @@ void draw_player_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * f
 
 void draw_press_key_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, const int& msg_top_x)
 {
-	al_draw_text(font, ACWhite, msg_top_x, (HALF_HEIGHT / 2) - MARGIN_LEFT + (al_get_font_line_height(font) * 2), 0, PRESS_ENTER);
+	al_draw_text(font, ACWhite, msg_top_x, (HALF_HEIGHT / 2) - MARGIN_LEFT + (al_get_font_line_height(font) * 2), 0, MSG_PLAY_AGAIN);
 }
 
 void draw_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, const int& half_width_of_winner_side, const char * const winner_msg)
 {
 	draw_player_winner_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, winner_msg) / 2), winner_msg);
-	draw_press_key_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, PRESS_ENTER) / 2));
+	draw_press_key_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, MSG_PLAY_AGAIN) / 2));
 }
 
-void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, const Object * limit_top, const Object * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_COLOR& ACBlack, const ALLEGRO_FONT * font, bool& has_winner)
+void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, const Object * limit_top, const Object * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, bool& has_winner)
 {
-	al_clear_to_color(ACBlack);
-
 	// draw top limit
 	al_draw_filled_rectangle(limit_top->collision_line_left(), limit_top->collision_line_top(), limit_top->collision_line_right(), limit_top->collision_line_botton(), ACWhite);
 
@@ -71,17 +68,22 @@ void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, c
 	// draw game score
 	al_draw_textf(font, ACWhite, 2, 2, 0, "%s:%u - %s:%u", p1->get_name(), p1->get_score(), p2->get_name(), p2->get_score());
 
+	// draw winner msg, if the game has a winner
 	if (p1->get_score() >= MAX_SCORE)
 	{
 		draw_winner_msg(ACWhite, font, (HALF_WIDTH / 2), "Player 1 Win!!!");
 		has_winner = true;
 	}
-
-	if (p2->get_score() >= MAX_SCORE)
+	else if (p2->get_score() >= MAX_SCORE)
 	{
 		draw_winner_msg(ACWhite, font, (HALF_WIDTH + (HALF_WIDTH / 2)), "Player 2 Win!!!");
 		has_winner = true;
 	}
+}
+
+void draw_starter_menu(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font)
+{
+	al_draw_textf(font, ACWhite, HALF_WIDTH - (al_get_text_width(font, MSG_PLAY_GAME) / 2), HALF_HEIGHT - al_get_font_line_height(font) / 2, 0, MSG_PLAY_GAME);
 }
 
 bool update_score(const OMBall * ball, OMPlayer * const p1, OMPlayer * const p2)
@@ -146,6 +148,9 @@ int main(int argn, char** argv)
 	unsigned char key[ALLEGRO_KEY_MAX];
 	memset(key, 0, sizeof(key));
 
+
+	bool starter_menu = true;
+
 	UPATimer->startTimer();
 	while (continue_to_play)
 	{
@@ -174,6 +179,11 @@ int main(int argn, char** argv)
 					p1.reset_score();
 					p2.reset_score();
 					ball.reverse_acceleration_x();
+				}
+				//starter menu
+				else if (starter_menu && key[ALLEGRO_KEY_SPACE])
+				{
+					starter_menu = false;
 				}
 
 				// Reset array of keys
@@ -207,7 +217,15 @@ int main(int argn, char** argv)
 		if (draw && al_is_event_queue_empty(UPAEventQueue->getEventQueue()))
 		{
 			draw = false;
-			draw_field(&p1, &p2, &ball, &limit_top, &limit_botton, ACWhite, ACBlack, font, has_winner);
+			al_clear_to_color(ACBlack);
+			if (starter_menu)
+			{
+				draw_starter_menu(ACWhite, font);
+			}
+			else
+			{
+				draw_field(&p1, &p2, &ball, &limit_top, &limit_botton, ACWhite, font, has_winner);
+			}
 			al_flip_display();
 		}
 	}
