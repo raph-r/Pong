@@ -61,10 +61,11 @@ void OMBall::move_ball()
 	this->right();
 }
 
-void OMBall::move_ball(OMPlayer * const p1, OMPlayer * const p2, const Object * limit_top, const Object * limit_botton)
+void OMBall::move_ball(OMPlayer * const p1, OMPlayer * const p2, const Object * limit_top, const Object * limit_botton, ASample * const sample)
 {
 	if (this->is_player_collided_left(p1) || this->is_player_collided_right(p2))
 	{
+		sample->play_sample();
 		this->try_increase_speed(p1, p2);
 		this->reverse_acceleration_x();
 		this->move_ball();
@@ -74,6 +75,7 @@ void OMBall::move_ball(OMPlayer * const p1, OMPlayer * const p2, const Object * 
 	if (this->is_player_collided_botton(p1) || this->is_player_collided_botton(p2) || this->is_player_collided_top(p1) || this->is_player_collided_top(p2) // player collision
 		|| this->collision_line_botton() >= limit_botton->collision_line_top() || this->collision_line_top() <= limit_top->collision_line_botton()) // limit collision
 	{
+		sample->play_sample();
 		this->try_increase_speed(p1, p2);
 		this->reverse_acceleration_y();
 		this->move_ball();

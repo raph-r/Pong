@@ -1,6 +1,7 @@
 #include "ATimer.h"
 #include "ADisplay.h"
 #include "AEventQueue.h"
+#include "ASample.h"
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_primitives.h"
 #include <memory>
@@ -37,7 +38,7 @@ void draw_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, co
 	draw_press_key_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, MSG_PLAY_AGAIN) / 2));
 }
 
-void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, const Object * limit_top, const Object * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, bool& has_winner)
+void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, const Object * limit_top, const Object * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, bool& has_winner, ASample * const collision_sample)
 {
 	// draw top limit
 	al_draw_filled_rectangle(limit_top->collision_line_left(), limit_top->collision_line_top(), limit_top->collision_line_right(), limit_top->collision_line_botton(), ACWhite);
@@ -60,7 +61,7 @@ void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, c
 	// move and draw ball
 	if(!has_winner)
 	{
-		ball->move_ball(p1, p2, limit_top, limit_botton);
+		ball->move_ball(p1, p2, limit_top, limit_botton, collision_sample);
 	}
 	
 	al_draw_filled_rectangle(ball->collision_line_left(), ball->collision_line_top(), ball->collision_line_right(), ball->collision_line_botton(), ACWhite);
@@ -112,7 +113,9 @@ int main(int argn, char** argv)
 	// Initialize the basics objects of Allegro
 	Validate::object_was_initialized(al_init(), "Allegro");
 	Validate::object_was_initialized(al_install_keyboard(), "Keyboard");
+	Validate::object_was_initialized(al_install_audio(), "Audio");
 	Validate::object_was_initialized(al_init_primitives_addon(), "Primitives");
+	Validate::object_was_initialized(al_init_acodec_addon(), "Allegro Codec");
 
 	// Initialize the object of Allegro that has encapsulation
 	std::unique_ptr<ATimer> UPATimer = std::make_unique<ATimer>(1.0 / 60);
@@ -141,13 +144,17 @@ int main(int argn, char** argv)
 	Object limit_top(0, MARGIN_TOP + 1, SCREEN_WIDTH, HEIGHT_DIVISION, "Limit Top");
 	Object limit_botton(0, SCREEN_HEIGHT - HEIGHT_DIVISION - MARGIN_BOTTON - 1, SCREEN_WIDTH, HEIGHT_DIVISION, "Limit Botton");
 
+	// Audio Sample
+	al_reserve_samples(2);
+	ASample collision_sample("collision.wav", ALLEGRO_PLAYMODE_ONCE);
+	ASample goal_sample("goal.wav", ALLEGRO_PLAYMODE_ONCE);
+	
 	//captures the current event
 	ALLEGRO_EVENT event;
 	
 	//user input
 	unsigned char key[ALLEGRO_KEY_MAX];
 	memset(key, 0, sizeof(key));
-
 
 	bool starter_menu = true;
 
@@ -209,6 +216,7 @@ int main(int argn, char** argv)
 
 		if (update_score(&ball, &p1, &p2))
 		{
+			goal_sample.play_sample();
 			p1.reset_position();
 			p2.reset_position();
 			ball.reset_position();
@@ -224,7 +232,7 @@ int main(int argn, char** argv)
 			}
 			else
 			{
-				draw_field(&p1, &p2, &ball, &limit_top, &limit_botton, ACWhite, font, has_winner);
+				draw_field(&p1, &p2, &ball, &limit_top, &limit_botton, ACWhite, font, has_winner, &collision_sample);
 			}
 			al_flip_display();
 		}
