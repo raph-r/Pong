@@ -14,5 +14,5 @@ ASample::~ASample()
 
 void ASample::play_sample() const
 {
-	al_play_sample(this->sample, 1.0, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
+	al_play_sample(this->sample, 1.0, 0, 1.0, this->playmode, 0);
 }
