@@ -119,7 +119,7 @@ int main(int argn, char** argv)
 
 	// Initialize the object of Allegro that has encapsulation
 	std::unique_ptr<ATimer> UPATimer = std::make_unique<ATimer>(1.0 / 60);
-	std::unique_ptr<ADisplay> UPADisplay = std::make_unique<ADisplay>(SCREEN_WIDTH, SCREEN_HEIGHT);
+	std::unique_ptr<ADisplay> UPADisplay = std::make_unique<ADisplay>();
 	std::unique_ptr<AEventQueue> UPAEventQueue = std::make_unique<AEventQueue>();
 	ALLEGRO_FONT * font = al_create_builtin_font();
 	Validate::object_was_initialized(font, "Font");

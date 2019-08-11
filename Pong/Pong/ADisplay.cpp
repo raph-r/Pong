@@ -1,8 +1,8 @@
 #include "ADisplay.h"
 
-ADisplay::ADisplay(const int & width, const int& height)
+ADisplay::ADisplay()
 {
-	this->display = al_create_display(width, height);
+	this->display = al_create_display(Constant::SCREEN_WIDTH, Constant::SCREEN_HEIGHT);
 	Validate::object_was_initialized(this->display, "Display");
 }
 
