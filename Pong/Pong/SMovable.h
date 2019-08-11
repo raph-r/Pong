@@ -1,6 +1,6 @@
 #pragma once
 #include "Square.h"
-class OMovable :
+class SMovable :
 	public Square
 {
 protected:
@@ -11,8 +11,8 @@ protected:
 	int initial_acceleration_x = 0;
 	int initial_acceleration_y = 0;
 public:
-	OMovable(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const int& acceleration_x, const int& acceleration_y, const char * name);
-	~OMovable();
+	SMovable(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const int& acceleration_x, const int& acceleration_y, const char * name);
+	~SMovable();
 	void reverse_acceleration_x();
 	void reverse_acceleration_y();
 	void up();

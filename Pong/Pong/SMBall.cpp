@@ -1,11 +1,11 @@
-#include "OMBall.h"
+#include "SMBall.h"
 
-OMBall::OMBall(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const int& acceleration_x, const int& acceleration_y, const char * name)
-	:OMovable(top_left_x, top_left_y, width, height, acceleration_x, acceleration_y, name){}
+SMBall::SMBall(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const int& acceleration_x, const int& acceleration_y, const char * name)
+	:SMovable(top_left_x, top_left_y, width, height, acceleration_x, acceleration_y, name){}
 
-OMBall::~OMBall(){}
+SMBall::~SMBall(){}
 
-bool OMBall::is_player_collided_top(const OMPlayer * player)
+bool SMBall::is_player_collided_top(const SMPlayer * player)
 {
 	if (this->top_left_y <= player->collision_line_botton() && this->top_left_y + this->height >= player->collision_line_botton())
 	{
@@ -14,7 +14,7 @@ bool OMBall::is_player_collided_top(const OMPlayer * player)
 	return false;
 }
 
-bool OMBall::is_player_collided_botton(const OMPlayer * player)
+bool SMBall::is_player_collided_botton(const SMPlayer * player)
 {
 	if (this->top_left_y <= player->collision_line_top() && this->top_left_y + this->height >= player->collision_line_top())
 	{
@@ -23,7 +23,7 @@ bool OMBall::is_player_collided_botton(const OMPlayer * player)
 	return false;
 }
 
-bool OMBall::is_player_collided_left(const OMPlayer * player)
+bool SMBall::is_player_collided_left(const SMPlayer * player)
 {
 	if (this->top_left_x <= player->collision_line_right() && this->top_left_x + this->width >= player->collision_line_right())
 	{
@@ -32,7 +32,7 @@ bool OMBall::is_player_collided_left(const OMPlayer * player)
 	return false;
 }
 
-bool OMBall::is_player_collided_right(const OMPlayer * player)
+bool SMBall::is_player_collided_right(const SMPlayer * player)
 {
 	if (this->top_left_x <= player->collision_line_left() && this->top_left_x + this->width >= player->collision_line_left())
 	{
@@ -41,27 +41,27 @@ bool OMBall::is_player_collided_right(const OMPlayer * player)
 	return false;
 }
 
-bool OMBall::is_player_between_vertical_range(const OMPlayer * player)
+bool SMBall::is_player_between_vertical_range(const SMPlayer * player)
 {
 	return (this->top_left_x <= player->collision_line_left() && this->top_left_x + width >= player->collision_line_left())
 		|| (this->top_left_x >= player->collision_line_left() && this->top_left_x + this->width <= player->collision_line_right())
 		|| (this->top_left_x <= player->collision_line_right() && this->top_left_x + width >= player->collision_line_right());
 }
 
-bool OMBall::is_player_between_horizontal_range(const OMPlayer * player)
+bool SMBall::is_player_between_horizontal_range(const SMPlayer * player)
 {
 	return (this->top_left_y <= player->collision_line_top() && this->top_left_y + this->height >= player->collision_line_top())
 		|| (this->top_left_y >= player->collision_line_top() && this->top_left_y + this->height <= player->collision_line_botton())
 		|| (this->top_left_y <= player->collision_line_botton() && this->top_left_y + this->height >= player->collision_line_botton());
 }
 
-void OMBall::move_ball()
+void SMBall::move_ball()
 {
 	this->down();
 	this->right();
 }
 
-void OMBall::move_ball(OMPlayer * const p1, OMPlayer * const p2, const Square * limit_top, const Square * limit_botton, ASample * const sample)
+void SMBall::move_ball(SMPlayer * const p1, SMPlayer * const p2, const Square * limit_top, const Square * limit_botton, ASample * const sample)
 {
 	if (this->is_player_collided_left(p1) || this->is_player_collided_right(p2))
 	{
@@ -84,7 +84,7 @@ void OMBall::move_ball(OMPlayer * const p1, OMPlayer * const p2, const Square * 
 	this->move_ball();
 }
 
-void OMBall::try_increase_speed(OMPlayer * const p1, OMPlayer * const p2)
+void SMBall::try_increase_speed(SMPlayer * const p1, SMPlayer * const p2)
 {
 	if (++this->hits >= 4)
 	{
@@ -113,7 +113,7 @@ void OMBall::try_increase_speed(OMPlayer * const p1, OMPlayer * const p2)
 	}
 }
 
-void OMBall::reset_position()
+void SMBall::reset_position()
 {
 	this->hits = 0;
 	this->top_left_x = this->initial_position_x;

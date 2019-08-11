@@ -1,6 +1,6 @@
-#include "OMovable.h"
+#include "SMovable.h"
 
-OMovable::OMovable(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const int& acceleration_x, const int& acceleration_y, const char * name) :
+SMovable::SMovable(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const int& acceleration_x, const int& acceleration_y, const char * name) :
 	Square(top_left_x, top_left_y, width, height, name)
 {
 	this->acceleration_x = std::move(acceleration_x);
@@ -11,39 +11,39 @@ OMovable::OMovable(const int& top_left_x, const int& top_left_y, const int& widt
 	this->initial_acceleration_y = this->acceleration_y;
 }
 
-OMovable::~OMovable(){}
+SMovable::~SMovable(){}
 
-void OMovable::reverse_acceleration_x()
+void SMovable::reverse_acceleration_x()
 {
 	this->acceleration_x *= -1;
 }
 
-void OMovable::reverse_acceleration_y()
+void SMovable::reverse_acceleration_y()
 {
 	this->acceleration_y *= -1;
 }
 
-void OMovable::up()
+void SMovable::up()
 {
 	this->top_left_y -= this->acceleration_y;
 }
 
-void OMovable::down()
+void SMovable::down()
 {
 	this->top_left_y += this->acceleration_y;
 }
 
-void OMovable::left()
+void SMovable::left()
 {
 	this->top_left_x -= this->acceleration_x;
 }
 
-void OMovable::right()
+void SMovable::right()
 {
 	this->top_left_x += this->acceleration_x;
 }
 
-void OMovable::reset_position()
+void SMovable::reset_position()
 {
 	this->top_left_x = this->initial_position_x;
 	this->top_left_y = this->initial_position_y;
@@ -51,22 +51,22 @@ void OMovable::reset_position()
 	this->acceleration_y = this->initial_acceleration_y;
 }
 
-void OMovable::add_acceleration_x()
+void SMovable::add_acceleration_x()
 {
 	this->acceleration_x++;
 }
 
-void OMovable::add_acceleration_y()
+void SMovable::add_acceleration_y()
 {
 	this->acceleration_y++;
 }
 
-void OMovable::subtract_acceleration_x()
+void SMovable::subtract_acceleration_x()
 {
 	this->acceleration_x--;
 }
 
-void OMovable::subtract_acceleration_y()
+void SMovable::subtract_acceleration_y()
 {
 	this->acceleration_y--;
 }

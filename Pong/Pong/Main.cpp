@@ -5,8 +5,8 @@
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_primitives.h"
 #include <memory>
-#include "OMPlayer.h"
-#include "OMBall.h"
+#include "SMPlayer.h"
+#include "SMBall.h"
 #define KEY_SEEN 1
 #define KEY_RELEASED 2
 #define SCREEN_WIDTH 640
@@ -38,7 +38,7 @@ void draw_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, co
 	draw_press_key_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, MSG_PLAY_AGAIN) / 2));
 }
 
-void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, const Square * limit_top, const Square * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, bool& has_winner, ASample * const collision_sample)
+void draw_field(SMPlayer * const p1, SMPlayer * const p2, SMBall * const ball, const Square * limit_top, const Square * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, bool& has_winner, ASample * const collision_sample)
 {
 	// draw top limit
 	al_draw_filled_rectangle(limit_top->collision_line_left(), limit_top->collision_line_top(), limit_top->collision_line_right(), limit_top->collision_line_botton(), ACWhite);
@@ -87,7 +87,7 @@ void draw_starter_menu(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font)
 	al_draw_textf(font, ACWhite, HALF_WIDTH - (al_get_text_width(font, MSG_PLAY_GAME) / 2), HALF_HEIGHT - al_get_font_line_height(font) / 2, 0, MSG_PLAY_GAME);
 }
 
-bool update_score(const OMBall * ball, OMPlayer * const p1, OMPlayer * const p2)
+bool update_score(const SMBall * ball, SMPlayer * const p1, SMPlayer * const p2)
 {
 	//player 1 gol
 	if (ball->collision_line_right() >= p2->collision_line_right())
@@ -134,11 +134,11 @@ int main(int argn, char** argv)
 	ALLEGRO_COLOR ACWhite = al_map_rgba_f(1, 1, 1, 1);
 
 	//Players 
-	OMPlayer p1(MARGIN_LEFT + 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_W, ALLEGRO_KEY_S, "Player 1");
-	OMPlayer p2(SCREEN_WIDTH - MARGIN_RIGHT - 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, "Player 2");
+	SMPlayer p1(MARGIN_LEFT + 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_W, ALLEGRO_KEY_S, "Player 1");
+	SMPlayer p2(SCREEN_WIDTH - MARGIN_RIGHT - 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, "Player 2");
 
 	//ball
-	OMBall ball(HALF_WIDTH - 5, HALF_HEIGHT - 5, 10, 10, 3, 3, "Ball");
+	SMBall ball(HALF_WIDTH - 5, HALF_HEIGHT - 5, 10, 10, 3, 3, "Ball");
 
 	//limits
 	Square limit_top(0, MARGIN_TOP + 1, SCREEN_WIDTH, HEIGHT_DIVISION, "Limit Top");
