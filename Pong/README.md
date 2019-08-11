@@ -1,13 +1,29 @@
 # Pong Game
+A simple Pong Game, using Allegro 5 and C++. If you have any question, please, let me know.
 
-A Pong Game developed for learning purposes, using Allegro5.
-If you have any question, please, send me.
+## Why did I do that? To learn simple:
+* Input;
+* Physics;
+* Collision detection;
+* Sound;
+* Scoring.
 
-### Prerequisites
-```
-C++ 11+
-Allegro5
-```
+## Features
+* 2 Players;
+* Score - Count the score of current game for each player;
+* Add Speed - The movement speed will be increased, while the ball is hit.
+
+## Scenes
+* 1 - Start Game
+* 2 - Game Level
+* 3 - End Game
+
+## Controls
+
+* Space - Start or play again the game;
+* Escape - Exit game;
+* W and S - Move player One;
+* Up arrow and down arrow - Move player Two.
 
 ## Built With
 
@@ -18,7 +34,7 @@ Allegro5
 
 ## Authors
 
-* **Raphael Rodrigues** - [Raph-R](https://github.com/raph-r)
+* **Raphael Rodrigues Teixeira de Freitas** - [Raph-R](https://github.com/raph-r)
 
 ## License
 
