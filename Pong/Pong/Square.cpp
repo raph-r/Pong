@@ -1,6 +1,6 @@
-#include "Object.h"
+#include "Square.h"
 
-Object::Object(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const char * name)
+Square::Square(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const char * name)
 {
 	this->top_left_x = std::move(top_left_x);
 	this->top_left_y = std::move(top_left_y);
@@ -9,29 +9,29 @@ Object::Object(const int& top_left_x, const int& top_left_y, const int& width, c
 	this->name = name;
 }
 
-Object::~Object(){}
+Square::~Square(){}
 
-int Object::collision_line_top() const
+int Square::collision_line_top() const
 {
 	return this->top_left_y;
 }
 
-int Object::collision_line_botton() const
+int Square::collision_line_botton() const
 {
 	return this->top_left_y + this->height;
 }
 
-int Object::collision_line_left() const
+int Square::collision_line_left() const
 {
 	return this->top_left_x;
 }
 
-int Object::collision_line_right() const
+int Square::collision_line_right() const
 {
 	return this->top_left_x + this->width;
 }
 
-const char * Object::get_name()
+const char * Square::get_name()
 {
 	return this->name;
 }

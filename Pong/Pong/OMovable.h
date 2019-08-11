@@ -1,7 +1,7 @@
 #pragma once
-#include "Object.h"
+#include "Square.h"
 class OMovable :
-	public Object
+	public Square
 {
 protected:
 	int acceleration_x = 0;

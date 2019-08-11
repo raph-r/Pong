@@ -19,7 +19,7 @@ int OMPlayer::get_score() const
 	return this->score;
 }
 
-void OMPlayer::move_player(const unsigned char * keys, const Object * limit_top, const Object * limit_botton)
+void OMPlayer::move_player(const unsigned char * keys, const Square * limit_top, const Square * limit_botton)
 {
 	if (keys[this->btn_to_up] && this->collision_line_top() > limit_top->collision_line_botton()) // limite superior
 	{

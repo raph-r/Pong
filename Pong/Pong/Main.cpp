@@ -38,7 +38,7 @@ void draw_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, co
 	draw_press_key_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, MSG_PLAY_AGAIN) / 2));
 }
 
-void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, const Object * limit_top, const Object * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, bool& has_winner, ASample * const collision_sample)
+void draw_field(OMPlayer * const p1, OMPlayer * const p2, OMBall * const ball, const Square * limit_top, const Square * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, bool& has_winner, ASample * const collision_sample)
 {
 	// draw top limit
 	al_draw_filled_rectangle(limit_top->collision_line_left(), limit_top->collision_line_top(), limit_top->collision_line_right(), limit_top->collision_line_botton(), ACWhite);
@@ -141,8 +141,8 @@ int main(int argn, char** argv)
 	OMBall ball(HALF_WIDTH - 5, HALF_HEIGHT - 5, 10, 10, 3, 3, "Ball");
 
 	//limits
-	Object limit_top(0, MARGIN_TOP + 1, SCREEN_WIDTH, HEIGHT_DIVISION, "Limit Top");
-	Object limit_botton(0, SCREEN_HEIGHT - HEIGHT_DIVISION - MARGIN_BOTTON - 1, SCREEN_WIDTH, HEIGHT_DIVISION, "Limit Botton");
+	Square limit_top(0, MARGIN_TOP + 1, SCREEN_WIDTH, HEIGHT_DIVISION, "Limit Top");
+	Square limit_botton(0, SCREEN_HEIGHT - HEIGHT_DIVISION - MARGIN_BOTTON - 1, SCREEN_WIDTH, HEIGHT_DIVISION, "Limit Botton");
 
 	// Audio Sample
 	al_reserve_samples(2);

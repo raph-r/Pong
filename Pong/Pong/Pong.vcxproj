@@ -147,7 +147,7 @@
     <ClCompile Include="Constant.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ATimer.cpp" />
-    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Square.cpp" />
     <ClCompile Include="OMBall.cpp" />
     <ClCompile Include="OMovable.cpp" />
     <ClCompile Include="OMPlayer.cpp" />
@@ -159,7 +159,7 @@
     <ClInclude Include="ASample.h" />
     <ClInclude Include="ATimer.h" />
     <ClInclude Include="Constant.h" />
-    <ClInclude Include="Object.h" />
+    <ClInclude Include="Square.h" />
     <ClInclude Include="OMBall.h" />
     <ClInclude Include="OMovable.h" />
     <ClInclude Include="OMPlayer.h" />

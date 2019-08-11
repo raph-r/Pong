@@ -1,7 +1,7 @@
 #include "OMovable.h"
 
 OMovable::OMovable(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const int& acceleration_x, const int& acceleration_y, const char * name) :
-	Object(top_left_x, top_left_y, width, height, name)
+	Square(top_left_x, top_left_y, width, height, name)
 {
 	this->acceleration_x = std::move(acceleration_x);
 	this->acceleration_y = std::move(acceleration_y);

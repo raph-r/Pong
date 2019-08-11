@@ -61,7 +61,7 @@ void OMBall::move_ball()
 	this->right();
 }
 
-void OMBall::move_ball(OMPlayer * const p1, OMPlayer * const p2, const Object * limit_top, const Object * limit_botton, ASample * const sample)
+void OMBall::move_ball(OMPlayer * const p1, OMPlayer * const p2, const Square * limit_top, const Square * limit_botton, ASample * const sample)
 {
 	if (this->is_player_collided_left(p1) || this->is_player_collided_right(p2))
 	{
