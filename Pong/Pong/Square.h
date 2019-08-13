@@ -56,7 +56,7 @@ class Square
 		 * Captura a posicao da linha superior do quadrado
 		 * @return posicao da linha superior do quadrado
 		*/
-		int collision_line_top() const;
+		int get_top_line() const;
 
 		/**
 		 * <EN>
@@ -67,7 +67,7 @@ class Square
 		 * Captura a posicao da linha inferior do quadrado
 		 * @return posicao da linha inferior do quadrado
 		*/
-		int collision_line_botton() const;
+		int get_botton_line() const;
 
 		/**
 		 * <EN>
@@ -78,7 +78,7 @@ class Square
 		 * Captura a posicao da linha esquerda do quadrado
 		 * @return posicao da linha esquerda do quadrado
 		*/
-		int collision_line_left() const;
+		int get_left_line() const;
 
 		/**
 		 * <EN>
@@ -89,7 +89,7 @@ class Square
 		 * Captura a posicao da linha direita do quadrado
 		 * @return posicao da linha direita do quadrado
 		*/
-		int collision_line_right() const;
+		int get_right_line() const;
 
 		/**
 		 * <EN>

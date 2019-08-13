@@ -41,10 +41,10 @@ void draw_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, co
 void draw_field(SMPlayer * const p1, SMPlayer * const p2, SMBall * const ball, const Square * limit_top, const Square * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, bool& has_winner, ASample * const collision_sample)
 {
 	// draw top limit
-	al_draw_filled_rectangle(limit_top->collision_line_left(), limit_top->collision_line_top(), limit_top->collision_line_right(), limit_top->collision_line_botton(), ACWhite);
+	al_draw_filled_rectangle(limit_top->get_left_line(), limit_top->get_top_line(), limit_top->get_right_line(), limit_top->get_botton_line(), ACWhite);
 
 	// draw botton limit
-	al_draw_filled_rectangle(limit_botton->collision_line_left(), limit_botton->collision_line_top(), limit_botton->collision_line_right(), limit_botton->collision_line_botton(), ACWhite);
+	al_draw_filled_rectangle(limit_botton->get_left_line(), limit_botton->get_top_line(), limit_botton->get_right_line(), limit_botton->get_botton_line(), ACWhite);
 
 	// draw division line
 	for (unsigned int i = 2; i < 20; i++)
@@ -53,10 +53,10 @@ void draw_field(SMPlayer * const p1, SMPlayer * const p2, SMBall * const ball, c
 	}
 
 	// draw player1 (left player)
-	al_draw_filled_rectangle(p1->collision_line_left(), p1->collision_line_top(), p1->collision_line_right(), p1->collision_line_botton(), ACWhite);
+	al_draw_filled_rectangle(p1->get_left_line(), p1->get_top_line(), p1->get_right_line(), p1->get_botton_line(), ACWhite);
 
 	// draw player2 (right player)
-	al_draw_filled_rectangle(p2->collision_line_left(), p2->collision_line_top(), p2->collision_line_right(), p2->collision_line_botton(), ACWhite);
+	al_draw_filled_rectangle(p2->get_left_line(), p2->get_top_line(), p2->get_right_line(), p2->get_botton_line(), ACWhite);
 
 	// move and draw ball
 	if(!has_winner)
@@ -64,7 +64,7 @@ void draw_field(SMPlayer * const p1, SMPlayer * const p2, SMBall * const ball, c
 		ball->move_ball(p1, p2, limit_top, limit_botton, collision_sample);
 	}
 	
-	al_draw_filled_rectangle(ball->collision_line_left(), ball->collision_line_top(), ball->collision_line_right(), ball->collision_line_botton(), ACWhite);
+	al_draw_filled_rectangle(ball->get_left_line(), ball->get_top_line(), ball->get_right_line(), ball->get_botton_line(), ACWhite);
 
 	// draw game score
 	al_draw_textf(font, ACWhite, 2, 2, 0, "%s:%u - %s:%u", p1->get_name(), p1->get_score(), p2->get_name(), p2->get_score());
@@ -90,13 +90,13 @@ void draw_starter_menu(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font)
 bool update_score(const SMBall * ball, SMPlayer * const p1, SMPlayer * const p2)
 {
 	//player 1 gol
-	if (ball->collision_line_right() >= p2->collision_line_right())
+	if (ball->get_right_line() >= p2->get_right_line())
 	{
 		p1->add_score();
 		return true;
 	}
 	//player 2 gol
-	else if (ball->collision_line_left() <= p1->collision_line_left())
+	else if (ball->get_left_line() <= p1->get_left_line())
 	{
 		p2->add_score();
 		return true;

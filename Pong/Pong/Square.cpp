@@ -11,22 +11,22 @@ Square::Square(const int& top_left_x, const int& top_left_y, const int& width, c
 
 Square::~Square(){}
 
-int Square::collision_line_top() const
+int Square::get_top_line() const
 {
 	return this->top_left_y;
 }
 
-int Square::collision_line_botton() const
+int Square::get_botton_line() const
 {
 	return this->top_left_y + this->height;
 }
 
-int Square::collision_line_left() const
+int Square::get_left_line() const
 {
 	return this->top_left_x;
 }
 
-int Square::collision_line_right() const
+int Square::get_right_line() const
 {
 	return this->top_left_x + this->width;
 }

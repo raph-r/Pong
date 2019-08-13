@@ -21,11 +21,11 @@ int SMPlayer::get_score() const
 
 void SMPlayer::move_player(const unsigned char * keys, const Square * limit_top, const Square * limit_botton)
 {
-	if (keys[this->btn_to_up] && this->collision_line_top() > limit_top->collision_line_botton()) // limite superior
+	if (keys[this->btn_to_up] && this->get_top_line() > limit_top->get_botton_line()) // limite superior
 	{
 		this->up();
 	}
-	if (keys[this->btn_to_down] && this->collision_line_botton() < limit_botton->collision_line_top()) // limite inferior
+	if (keys[this->btn_to_down] && this->get_botton_line() < limit_botton->get_top_line()) // limite inferior
 	{
 		this->down();
 	}
