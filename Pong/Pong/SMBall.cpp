@@ -1,7 +1,14 @@
 #include "SMBall.h"
 
-SMBall::SMBall(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const int& acceleration_x, const int& acceleration_y, const char * name)
-	:SMovable(top_left_x, top_left_y, width, height, acceleration_x, acceleration_y, name){}
+SMBall::SMBall():SMovable(
+	Constant::BALL_POSITION_X,
+	Constant::BALL_POSITION_Y,
+	Constant::BALL_WIDTH,
+	Constant::BALL_HEIGHT,
+	Constant::BALL_ACCELERATION_X,
+	Constant::BALL_ACCELERATION_Y,
+	Constant::BALL_NAME
+){}
 
 SMBall::~SMBall(){}
 
@@ -116,9 +123,9 @@ void SMBall::try_increase_speed(SMPlayer * const p1, SMPlayer * const p2)
 void SMBall::reset_position()
 {
 	this->hits = 0;
-	this->top_left_x = this->initial_position_x;
-	this->top_left_y = this->initial_position_y;
-	this->acceleration_y = this->initial_acceleration_y;
+	this->top_left_x = Constant::BALL_POSITION_X;
+	this->top_left_y = Constant::BALL_POSITION_Y;
+	this->acceleration_y = Constant::BALL_ACCELERATION_Y;
 
 	if ((this->acceleration_x > 0 && this->initial_acceleration_x > 0) || (this->acceleration_x < 0 && this->initial_acceleration_x < 0))
 	{

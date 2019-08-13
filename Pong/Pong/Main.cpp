@@ -138,7 +138,7 @@ int main(int argn, char** argv)
 	SMPlayer p2(SCREEN_WIDTH - MARGIN_RIGHT - 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, "Player 2");
 
 	//ball
-	SMBall ball(HALF_WIDTH - 5, HALF_HEIGHT - 5, 10, 10, 3, 3, "Ball");
+	SMBall ball;
 
 	//limits
 	Square limit_top(0, MARGIN_TOP + 1, SCREEN_WIDTH, HEIGHT_DIVISION, "Limit Top");

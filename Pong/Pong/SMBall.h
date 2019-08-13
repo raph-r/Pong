@@ -2,6 +2,7 @@
 #include "SMovable.h"
 #include "SMPlayer.h"
 #include "ASample.h"
+#include "Constant.h"
 
 class SMBall :
 	public SMovable
@@ -20,7 +21,7 @@ private:
 
 public:
 
-	SMBall(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const int& acceleration_x, const int& acceleration_y, const char * name);
+	SMBall();
 	~SMBall();
 	void move_ball(SMPlayer * const p1, SMPlayer * const p2, const Square * limit_top, const Square * limit_botton, ASample * const sample);
 	void reset_position();
