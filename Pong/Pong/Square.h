@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "Validate.h"
+#include <iostream>
 
 /**
  * <EN>
@@ -114,7 +115,7 @@ class Square
 		 * @param[in] pos - Posicao para verificar
 		 * @return True caso 'pos' esteja entre a linha esquerda e a linha direta de Square. Caso contrario, False
 		*/
-		bool pos_is_between_horizontal_borders(const int & pos);
+		bool pos_is_between_horizontal_borders(const int & pos) const;
 
 		/**
 		 * <EN>
@@ -127,7 +128,7 @@ class Square
 		 * @param[in] pos - Posicao para verificar
 		 * @return True caso 'pos' esteja entre a linha superior e a linha inferior de Square. Caso contrario, False
 		*/
-		bool pos_is_between_vertical_borders(const int & pos);
+		bool pos_is_between_vertical_borders(const int & pos) const;
 
 		/**
 		 * <EN>
