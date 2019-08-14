@@ -38,7 +38,7 @@ void draw_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, co
 	draw_press_key_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, MSG_PLAY_AGAIN) / 2));
 }
 
-void draw_field(SMPlayer * const p1, SMPlayer * const p2, SMBall * const ball, const Square * limit_top, const Square * limit_botton, const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, bool& has_winner, ASample * const collision_sample)
+void draw_field(SMPlayer * p1, SMPlayer * p2, SMBall * ball, Square * limit_top, Square * limit_botton, ALLEGRO_COLOR& ACWhite, ALLEGRO_FONT * font, bool& has_winner, ASample * collision_sample)
 {
 	// draw top limit
 	al_draw_filled_rectangle(limit_top->get_left_line(), limit_top->get_top_line(), limit_top->get_right_line(), limit_top->get_botton_line(), ACWhite);
@@ -134,8 +134,8 @@ int main(int argn, char** argv)
 	ALLEGRO_COLOR ACWhite = al_map_rgba_f(1, 1, 1, 1);
 
 	//Players 
-	SMPlayer p1(MARGIN_LEFT + 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_W, ALLEGRO_KEY_S, "Player 1");
-	SMPlayer p2(SCREEN_WIDTH - MARGIN_RIGHT - 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, 4, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, "Player 2");
+	SMPlayer p1(MARGIN_LEFT + 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, ALLEGRO_KEY_W, ALLEGRO_KEY_S, "Player 1");
+	SMPlayer p2(SCREEN_WIDTH - MARGIN_RIGHT - 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, "Player 2");
 
 	//ball
 	SMBall ball;
@@ -185,7 +185,7 @@ int main(int argn, char** argv)
 					has_winner = false;
 					p1.reset_score();
 					p2.reset_score();
-					ball.reverse_acceleration_x();
+					ball.inverts_horizontal_direction();
 				}
 				//starter menu
 				else if (starter_menu && key[ALLEGRO_KEY_SPACE])
@@ -219,7 +219,7 @@ int main(int argn, char** argv)
 			goal_sample.play_sample();
 			p1.reset_position();
 			p2.reset_position();
-			ball.reset_position();
+			ball.reset();
 		}
 
 		if (draw && al_is_event_queue_empty(UPAEventQueue->getEventQueue()))

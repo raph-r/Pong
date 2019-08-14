@@ -4,26 +4,104 @@
 #include "ASample.h"
 #include "Constant.h"
 
-class SMBall :
-	public SMovable
+/**
+ * <EN>
+ * Represents the ball of game
+ * <PT-Br>
+ * Representa a bola do jogo
+*/
+class SMBall : public SMovable
 {
-private:
+	private:
 
-	unsigned int hits = 0;
-	bool is_player_between_vertical_range(const SMPlayer * player);
-	bool is_player_between_horizontal_range(const SMPlayer * player);
-	bool is_player_collided_top(const SMPlayer * player);
-	bool is_player_collided_botton(const SMPlayer * player);
-	bool is_player_collided_left(const SMPlayer * player);
-	bool is_player_collided_right(const SMPlayer * player);
-	void move_ball();
-	void try_increase_speed(SMPlayer * const p1, SMPlayer * const p2);
+		bool to_right = true;
+		bool to_down = true;
+		unsigned int hits = 0;
 
-public:
+		/**
+		 * <EN>
+		 * Move the object
+		 *
+		 * <PT-Br>
+		 * Movimenta o objeto
+		*/
+		void move_ball();
 
-	SMBall();
-	~SMBall();
-	void move_ball(SMPlayer * const p1, SMPlayer * const p2, const Square * limit_top, const Square * limit_botton, ASample * const sample);
-	void reset_position();
+		/**
+		 * <EN>
+		 * If the quantity of SMBall::hits was been reached, adds acceleration to SMBall and players
+		 * @param[in] p1 - Pointer to Player 1
+		 * @param[in] p2 - Pointer to Player 2
+		 * <PT-Br>
+		 * Caso a quantidade de SMBall::hits tenha sido alcancada, aumenta a velocidade de momento de SMBall e dos players
+		 * @param[in] p1 - Ponteiro para Player 1
+		 * @param[in] p2 - Ponteiro para Player 2
+		*/
+		void try_increase_speed(SMPlayer * const p1, SMPlayer * const p2);
+
+	public:
+
+		/**
+		 * <EN>
+		 * Class constructor. Create a screen to game
+		 *
+		 * <PT-Br>
+		 * Construtor da classe. Cria uma tela para o jogo
+		*/
+		SMBall();
+
+		/**
+		 * <EN>
+		 * Class desconstructor
+		 *
+		 * <PT-Br>
+		 * Desconstrutor da classe
+		*/
+		~SMBall();
+
+		/**
+		 * <EN>
+		 * Verify if SMBall collided with some object and change the directions of your movements
+		 * @param[in] p1 - Pointer to Player 1
+		 * @param[in] p2 - Pointer to Player 2
+		 * @param[in] top_limit - Pointer to Object that represents the top limit of screen
+		 * @param[in] botton_limit - Pointer to Object that represents the botton limit of screen
+		 * @param[in] sample - Pointer to sample that will be played when some collision happens
+		 * <PT-Br>
+		 * Verifica se SMBall colidiu com algum objeto e altera a direcao dos movimentos, de acordo com cada resultado
+		 * @param[in] p1 - Ponteiro para Player 1
+		 * @param[in] p2 - Ponteiro para Player 2
+		 * @param[in] top_limit - Ponteiro para o objeto que representa o limite superior da tela
+		 * @param[in] botton_limit - Ponteiro para o objeto que representa o limite inferior da tela
+		 * @param[in] sample - Ponteiro para o som que devera ser tocado, caso a SMBall tenha colidido com alguma coisa
+		*/
+		void move_ball(SMPlayer * const p1, SMPlayer * const p2, Square const * const top_limit, Square const * const botton_limit, ASample const * const sample);
+
+		/**
+		 * <EN>
+		 * Reverts all attributes, to the values that was defined at the moment of creation of object
+		 *
+		 * <PT-Br>
+		 * Reverte todos os atributos para os valores definidos no momento da criacao do objeto
+		*/
+		void reset();
+
+		/**
+		 * <EN>
+		 * Inverts the horizontal direction of movement 
+		 *
+		 * <PT-Br>
+		 * Inverte a direcao horizontal do movimento
+		*/
+		void inverts_horizontal_direction();
+
+		/**
+		 * <EN>
+		 * Inverts the vertical direction of movement
+		 *
+		 * <PT-Br>
+		 * Inverte a direcao vertical do movimento
+		*/
+		void inverts_vertical_direction();
 };
 

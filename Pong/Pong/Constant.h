@@ -21,8 +21,7 @@ class Constant
 		static const unsigned int BALL_HEIGHT;
 		static const unsigned int BALL_POSITION_X;
 		static const unsigned int BALL_POSITION_Y;
-		static const unsigned int BALL_ACCELERATION_X;
-		static const unsigned int BALL_ACCELERATION_Y;
+		static const unsigned int BALL_ACCELERATION;
 		static const char BALL_NAME[];
 };
 
