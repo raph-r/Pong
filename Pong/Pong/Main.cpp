@@ -2,49 +2,41 @@
 #include "ADisplay.h"
 #include "AEventQueue.h"
 #include "ASample.h"
+#include "ATTFFont.h"
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_primitives.h"
 #include <memory>
 #include "SMPlayer.h"
 #include "SMBall.h"
 
-void draw_player_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, const int& msg_top_x, const char * const winner_msg)
+void draw_winner_msg(ALLEGRO_COLOR * color, const std::shared_ptr<const ATTFFont> font, const char * const winner_msg, const int & middle_of_winner_side)
 {
-	al_draw_text(font, ACWhite, msg_top_x, (Constant::HALF_SCREEN_HEIGHT / 2) - Constant::HORIZONTAL_MARGIN, 0, winner_msg);
+	al_draw_textf(font->getFont(), *color, middle_of_winner_side, Constant::HALF_SCREEN_HEIGHT - al_get_font_line_height(font->getFont()), ALLEGRO_ALIGN_CENTER, winner_msg);
+	al_draw_textf( font->getFont(), *color, middle_of_winner_side, Constant::HALF_SCREEN_HEIGHT, ALLEGRO_ALIGN_CENTER, Constant::MSG_PLAY_AGAIN);
 }
 
-void draw_press_key_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, const int& msg_top_x)
+void draw_objects(SMPlayer * p1, SMPlayer * p2, SMBall * ball, Square * upper_limit, Square * lower_limit, ALLEGRO_COLOR * color, const std::shared_ptr<const ATTFFont> font)
 {
-	al_draw_text(font, ACWhite, msg_top_x, (Constant::HALF_SCREEN_HEIGHT / 2) - Constant::HORIZONTAL_MARGIN + (al_get_font_line_height(font) * 2), 0, Constant::MSG_PLAY_AGAIN);
-}
-
-void draw_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, const int& half_width_of_winner_side, const char * const winner_msg)
-{
-	draw_player_winner_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, winner_msg) / 2), winner_msg);
-	draw_press_key_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, Constant::MSG_PLAY_AGAIN) / 2));
-}
-
-void draw_objects(SMPlayer * p1, SMPlayer * p2, SMBall * ball, Square * upper_limit, Square * lower_limit, ALLEGRO_COLOR * ACWhite, ALLEGRO_FONT * font)
-{
-	upper_limit->draw(ACWhite);
-	lower_limit->draw(ACWhite);
-	p1->draw(ACWhite);
-	p2->draw(ACWhite);
-	ball->draw(ACWhite);
+	upper_limit->draw(color);
+	lower_limit->draw(color);
+	p1->draw(color);
+	p2->draw(color);
+	ball->draw(color);
 
 	// Division line
 	for (unsigned int i = 2; i < 20; i++)
 	{
-		al_draw_filled_rectangle(Constant::HALF_SCREEN_WIDTH - 2, (i * Constant::HEIGHT_DIVISION), Constant::HALF_SCREEN_WIDTH + 2, ((i++) * Constant::HEIGHT_DIVISION), *ACWhite);
+		al_draw_filled_rectangle(Constant::HALF_SCREEN_WIDTH - 2, (i * Constant::HEIGHT_DIVISION), Constant::HALF_SCREEN_WIDTH + 2, ((i++) * Constant::HEIGHT_DIVISION), *color);
 	}
 
 	// draw game score
-	al_draw_textf(font, *ACWhite, 2, 2, 0, "%s:%u - %s:%u", p1->get_name(), p1->get_score(), p2->get_name(), p2->get_score());
+	al_draw_textf(font->getFont(), *color, Constant::HALF_SCREEN_WIDTH - 60, 60 - (al_get_font_line_height(font->getFont()) / 2), ALLEGRO_ALIGN_CENTER, "%u", p1->get_score());
+	al_draw_textf(font->getFont(), *color, Constant::HALF_SCREEN_WIDTH + 60, 60 - (al_get_font_line_height(font->getFont()) / 2), ALLEGRO_ALIGN_CENTER, "%u", p2->get_score());
 }
 
-void draw_starter_menu(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font)
+void draw_starter_menu(const ALLEGRO_COLOR& color, const std::shared_ptr<const ATTFFont> font)
 {
-	al_draw_textf(font, ACWhite, Constant::HALF_SCREEN_WIDTH - (al_get_text_width(font, Constant::MSG_PLAY_GAME) / 2), Constant::HALF_SCREEN_HEIGHT - al_get_font_line_height(font) / 2, 0, Constant::MSG_PLAY_GAME);
+	al_draw_textf(font->getFont(), color, Constant::HALF_SCREEN_WIDTH, Constant::HALF_SCREEN_HEIGHT - (al_get_font_line_height(font->getFont()) / 2), ALLEGRO_ALIGN_CENTER, Constant::MSG_PLAY_GAME);
 }
 
 bool update_score(const SMBall * ball, SMPlayer * const p1, SMPlayer * const p2)
@@ -66,14 +58,18 @@ bool update_score(const SMBall * ball, SMPlayer * const p1, SMPlayer * const p2)
 
 int main(int argn, char** argv)
 {
+	int scene = 1;
 	bool continue_to_play = true;
 	bool draw = false;
-	bool has_winner = false;
+	bool p1_winner = false;
+	bool p2_winner = false;
 
 	// Initialize the basics objects of Allegro
 	Validate::object_was_initialized(al_init(), "Allegro");
 	Validate::object_was_initialized(al_install_keyboard(), "Keyboard");
 	Validate::object_was_initialized(al_install_audio(), "Audio");
+	Validate::object_was_initialized(al_init_font_addon(), "Font Addon");
+	Validate::object_was_initialized(al_init_ttf_addon(), "Font TTF Addon");
 	Validate::object_was_initialized(al_init_primitives_addon(), "Primitives");
 	Validate::object_was_initialized(al_init_acodec_addon(), "Allegro Codec");
 
@@ -81,8 +77,8 @@ int main(int argn, char** argv)
 	std::unique_ptr<ATimer> UPATimer = std::make_unique<ATimer>(1.0 / 60);
 	std::unique_ptr<ADisplay> UPADisplay = std::make_unique<ADisplay>();
 	std::unique_ptr<AEventQueue> UPAEventQueue = std::make_unique<AEventQueue>();
-	ALLEGRO_FONT * font = al_create_builtin_font();
-	Validate::object_was_initialized(font, "Font");
+	std::shared_ptr<ATTFFont> SPFont_24 = std::make_shared<ATTFFont>("Oswald-Medium.ttf", 24);
+	std::shared_ptr<ATTFFont> SPFont_18 = std::make_shared<ATTFFont>("Oswald-Medium.ttf", 18);
 
 	// add source to event queue
 	al_register_event_source(UPAEventQueue->getEventQueue(), al_get_keyboard_event_source());
@@ -116,9 +112,8 @@ int main(int argn, char** argv)
 	unsigned char key[ALLEGRO_KEY_MAX];
 	memset(key, 0, sizeof(key));
 
-	int scene = 1;
-
 	UPATimer->startTimer();
+
 	while (continue_to_play)
 	{
 		al_wait_for_event(UPAEventQueue->getEventQueue(), &event);
@@ -126,25 +121,48 @@ int main(int argn, char** argv)
 		switch (event.type)
 		{
 			case ALLEGRO_EVENT_TIMER:
-				// Exist Game
+				// Exit Game
 				if (key[ALLEGRO_KEY_ESCAPE])
 				{
 					continue_to_play = false;
 				}
 
+				// Scene loop
 				if (scene == 2)
 				{
-					// Move players
-					if (!has_winner)
+					if (!p1_winner && !p2_winner)
 					{
-						p1.move_player(key, &limit_top, &limit_botton);
-						p2.move_player(key, &limit_top, &limit_botton);
-						ball.move_ball(&p1, &p2, &limit_top, &limit_botton, &collision_sample);
+						// verify if has a winner
+						if (p1.get_score() >= Constant::MAX_SCORE)
+						{
+							p1_winner = true;
+						}
+						else if (p2.get_score() >= Constant::MAX_SCORE)
+						{
+							p2_winner = true;
+						}
+						else
+						{
+							// Move objects
+							p1.move_player(key, &limit_top, &limit_botton);
+							p2.move_player(key, &limit_top, &limit_botton);
+							ball.move_ball(&p1, &p2, &limit_top, &limit_botton, &collision_sample);
+
+							// Update game score
+							if (update_score(&ball, &p1, &p2))
+							{
+								goal_sample.play_sample();
+								p1.reset_position();
+								p2.reset_position();
+								ball.reset();
+							}
+						}
 					}
 					// reload game, if it has a winner and space bar is pressed
 					else if (key[ALLEGRO_KEY_SPACE])
 					{
-						has_winner = false;
+						p1_winner = false;
+						p2_winner = false;
 						p1.reset();
 						p2.reset();
 						ball.inverts_horizontal_direction();
@@ -176,43 +194,33 @@ int main(int argn, char** argv)
 				break;
 		}
 
-		if (update_score(&ball, &p1, &p2))
-		{
-			goal_sample.play_sample();
-			p1.reset_position();
-			p2.reset_position();
-			ball.reset();
-		}
-
 		if (draw && al_is_event_queue_empty(UPAEventQueue->getEventQueue()))
 		{
 			draw = false;
 			al_clear_to_color(ACBlack);
 			
+			// Draw second scene
 			if(scene == 2)
 			{
-				draw_objects(&p1, &p2, &ball, &limit_top, &limit_botton, &ACWhite, font);
-
-				// draw winner msg, if the game has a winner
-				if (p1.get_score() >= Constant::MAX_SCORE)
+				draw_objects(&p1, &p2, &ball, &limit_top, &limit_botton, &ACWhite, SPFont_24);
+				// if has a winner, draw msg
+				if (p1_winner)
 				{
-					draw_winner_msg(ACWhite, font, (Constant::Constant::HALF_SCREEN_WIDTH / 2), "Player 1 Win!!!");
-					has_winner = true;
+					draw_winner_msg(&ACWhite, SPFont_18, Constant::WINNER_MSG_P1, Constant::HALF_OF_SIDE_PLAYER_1);
 				}
-				else if (p2.get_score() >= Constant::MAX_SCORE)
+				else if (p2_winner)
 				{
-					draw_winner_msg(ACWhite, font, (Constant::HALF_SCREEN_WIDTH + (Constant::HALF_SCREEN_WIDTH / 2)), "Player 2 Win!!!");
-					has_winner = true;
+					draw_winner_msg(&ACWhite, SPFont_18, Constant::WINNER_MSG_P2, Constant::HALF_OF_SIDE_PLAYER_2);
 				}
 			}
+			// Draw first scene
 			else if (scene == 1)
 			{
-				draw_starter_menu(ACWhite, font);
+				draw_starter_menu(ACWhite, SPFont_24);
 			}
 
 			al_flip_display();
 		}
 	}
-	al_destroy_font(font);
 	return 0;
 }

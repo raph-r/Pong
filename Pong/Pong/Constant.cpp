@@ -25,3 +25,7 @@ const unsigned int Constant::PLAYER_HEIGHT = 60;
 const unsigned int Constant::PLAYER_POSITION_Y = Constant::HALF_SCREEN_HEIGHT - (Constant::PLAYER_HEIGHT / 2);
 const unsigned int Constant::PLAYER_1_POSITION_X = Constant::HORIZONTAL_MARGIN;
 const unsigned int Constant::PLAYER_2_POSITION_X = Constant::SCREEN_WIDTH - Constant::HORIZONTAL_MARGIN - Constant::PLAYER_WIDTH;
+const char Constant::WINNER_MSG_P1[] = "Player 1 Win!!!";
+const char Constant::WINNER_MSG_P2[] = "Player 2 Win!!!";
+const unsigned int Constant::HALF_OF_SIDE_PLAYER_1 = Constant::HALF_SCREEN_WIDTH / 2;
+const unsigned int Constant::HALF_OF_SIDE_PLAYER_2 = Constant::HALF_SCREEN_WIDTH + (Constant::HALF_SCREEN_WIDTH / 2);

@@ -51,6 +51,9 @@
     <ClCompile Include="SMPlayer.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
+    <ClCompile Include="ATTFFont.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Validate.h">
@@ -83,5 +86,13 @@
     <ClInclude Include="SMPlayer.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
+    <ClInclude Include="ATTFFont.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Oswald-Medium.ttf">
+      <Filter>Arquivos de Recurso</Filter>
+    </Font>
   </ItemGroup>
 </Project>

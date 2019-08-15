@@ -23,7 +23,7 @@ class Constant
 		static const int MAX_SCORE;
 		static const char MSG_PLAY_AGAIN[];
 		static const char MSG_PLAY_GAME[];
-
+		
 		static const unsigned int BALL_WIDTH;
 		static const unsigned int BALL_HEIGHT;
 		static const unsigned int BALL_POSITION_X;
@@ -35,6 +35,10 @@ class Constant
 		static const unsigned int PLAYER_POSITION_Y;
 		static const unsigned int PLAYER_1_POSITION_X;
 		static const unsigned int PLAYER_2_POSITION_X;
+		static const char WINNER_MSG_P1[];
+		static const char WINNER_MSG_P2[];
+		static const unsigned int HALF_OF_SIDE_PLAYER_1;
+		static const unsigned int HALF_OF_SIDE_PLAYER_2;
 		
 };
 
