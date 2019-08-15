@@ -42,8 +42,3 @@ void SMovable::add_acceleration()
 {
 	this->acceleration++;
 }
-
-void SMovable::subtract_acceleration()
-{
-	this->acceleration--;
-}

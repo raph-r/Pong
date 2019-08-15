@@ -43,7 +43,7 @@ class Square
 		/**
 		 * <EN>
 		 * Class desconstructor
-
+		 *
 		 * <PT-Br>
 		 * Desconstrutor da classe
 		*/
