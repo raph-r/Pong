@@ -18,14 +18,17 @@ class Constant
 		static const unsigned int KEY_RELEASED;
 		static const unsigned int HORIZONTAL_MARGIN;
 		static const unsigned int VERTICAL_MARGIN;
+		static const unsigned int HEIGHT_DIVISION;
+		static const unsigned int ACCELERATION;
+		static const int MAX_SCORE;
+		static const char MSG_PLAY_AGAIN[];
+		static const char MSG_PLAY_GAME[];
 
 		static const unsigned int BALL_WIDTH;
 		static const unsigned int BALL_HEIGHT;
 		static const unsigned int BALL_POSITION_X;
 		static const unsigned int BALL_POSITION_Y;
 		static const char BALL_NAME[];
-
-		static const unsigned int ACCELERATION;
 
 		static const unsigned int PLAYER_WIDTH;
 		static const unsigned int PLAYER_HEIGHT;

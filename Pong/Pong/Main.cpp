@@ -7,84 +7,44 @@
 #include <memory>
 #include "SMPlayer.h"
 #include "SMBall.h"
-#define KEY_SEEN 1
-#define KEY_RELEASED 2
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
-#define MARGIN_TOP 10
-#define MARGIN_BOTTON 10
-#define MARGIN_LEFT 30
-#define MARGIN_RIGHT 30
-#define HEIGHT_DIVISION ((SCREEN_HEIGHT - (MARGIN_TOP + MARGIN_BOTTON)) / 20)
-#define HALF_HEIGHT (SCREEN_HEIGHT / 2)
-#define HALF_WIDTH (SCREEN_WIDTH / 2)
-#define MAX_SCORE 10
-#define MSG_PLAY_AGAIN "Press Space to play again!"
-#define MSG_PLAY_GAME "Press Space to play"
 
 void draw_player_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, const int& msg_top_x, const char * const winner_msg)
 {
-	al_draw_text(font, ACWhite, msg_top_x, (HALF_HEIGHT / 2) - MARGIN_LEFT, 0, winner_msg);
+	al_draw_text(font, ACWhite, msg_top_x, (Constant::HALF_SCREEN_HEIGHT / 2) - Constant::HORIZONTAL_MARGIN, 0, winner_msg);
 }
 
 void draw_press_key_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, const int& msg_top_x)
 {
-	al_draw_text(font, ACWhite, msg_top_x, (HALF_HEIGHT / 2) - MARGIN_LEFT + (al_get_font_line_height(font) * 2), 0, MSG_PLAY_AGAIN);
+	al_draw_text(font, ACWhite, msg_top_x, (Constant::HALF_SCREEN_HEIGHT / 2) - Constant::HORIZONTAL_MARGIN + (al_get_font_line_height(font) * 2), 0, Constant::MSG_PLAY_AGAIN);
 }
 
 void draw_winner_msg(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font, const int& half_width_of_winner_side, const char * const winner_msg)
 {
 	draw_player_winner_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, winner_msg) / 2), winner_msg);
-	draw_press_key_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, MSG_PLAY_AGAIN) / 2));
+	draw_press_key_msg(ACWhite, font, half_width_of_winner_side - (al_get_text_width(font, Constant::MSG_PLAY_AGAIN) / 2));
 }
 
-void draw_field(SMPlayer * p1, SMPlayer * p2, SMBall * ball, Square * limit_top, Square * limit_botton, ALLEGRO_COLOR& ACWhite, ALLEGRO_FONT * font, bool& has_winner, ASample * collision_sample)
+void draw_objects(SMPlayer * p1, SMPlayer * p2, SMBall * ball, Square * upper_limit, Square * lower_limit, ALLEGRO_COLOR * ACWhite, ALLEGRO_FONT * font)
 {
-	// draw top limit
-	al_draw_filled_rectangle(limit_top->get_left_line(), limit_top->get_top_line(), limit_top->get_right_line(), limit_top->get_botton_line(), ACWhite);
+	upper_limit->draw(ACWhite);
+	lower_limit->draw(ACWhite);
+	p1->draw(ACWhite);
+	p2->draw(ACWhite);
+	ball->draw(ACWhite);
 
-	// draw botton limit
-	al_draw_filled_rectangle(limit_botton->get_left_line(), limit_botton->get_top_line(), limit_botton->get_right_line(), limit_botton->get_botton_line(), ACWhite);
-
-	// draw division line
+	// Division line
 	for (unsigned int i = 2; i < 20; i++)
 	{
-		al_draw_filled_rectangle(HALF_WIDTH - 2, (i * HEIGHT_DIVISION), HALF_WIDTH + 2, ((i++) * HEIGHT_DIVISION), ACWhite);
+		al_draw_filled_rectangle(Constant::HALF_SCREEN_WIDTH - 2, (i * Constant::HEIGHT_DIVISION), Constant::HALF_SCREEN_WIDTH + 2, ((i++) * Constant::HEIGHT_DIVISION), *ACWhite);
 	}
-
-	// draw player1 (left player)
-	al_draw_filled_rectangle(p1->get_left_line(), p1->get_top_line(), p1->get_right_line(), p1->get_botton_line(), ACWhite);
-
-	// draw player2 (right player)
-	al_draw_filled_rectangle(p2->get_left_line(), p2->get_top_line(), p2->get_right_line(), p2->get_botton_line(), ACWhite);
-
-	// move and draw ball
-	if(!has_winner)
-	{
-		ball->move_ball(p1, p2, limit_top, limit_botton, collision_sample);
-	}
-	
-	al_draw_filled_rectangle(ball->get_left_line(), ball->get_top_line(), ball->get_right_line(), ball->get_botton_line(), ACWhite);
 
 	// draw game score
-	al_draw_textf(font, ACWhite, 2, 2, 0, "%s:%u - %s:%u", p1->get_name(), p1->get_score(), p2->get_name(), p2->get_score());
-
-	// draw winner msg, if the game has a winner
-	if (p1->get_score() >= MAX_SCORE)
-	{
-		draw_winner_msg(ACWhite, font, (HALF_WIDTH / 2), "Player 1 Win!!!");
-		has_winner = true;
-	}
-	else if (p2->get_score() >= MAX_SCORE)
-	{
-		draw_winner_msg(ACWhite, font, (HALF_WIDTH + (HALF_WIDTH / 2)), "Player 2 Win!!!");
-		has_winner = true;
-	}
+	al_draw_textf(font, *ACWhite, 2, 2, 0, "%s:%u - %s:%u", p1->get_name(), p1->get_score(), p2->get_name(), p2->get_score());
 }
 
 void draw_starter_menu(const ALLEGRO_COLOR& ACWhite, const ALLEGRO_FONT * font)
 {
-	al_draw_textf(font, ACWhite, HALF_WIDTH - (al_get_text_width(font, MSG_PLAY_GAME) / 2), HALF_HEIGHT - al_get_font_line_height(font) / 2, 0, MSG_PLAY_GAME);
+	al_draw_textf(font, ACWhite, Constant::HALF_SCREEN_WIDTH - (al_get_text_width(font, Constant::MSG_PLAY_GAME) / 2), Constant::HALF_SCREEN_HEIGHT - al_get_font_line_height(font) / 2, 0, Constant::MSG_PLAY_GAME);
 }
 
 bool update_score(const SMBall * ball, SMPlayer * const p1, SMPlayer * const p2)
@@ -141,8 +101,8 @@ int main(int argn, char** argv)
 	SMBall ball;
 
 	//limits
-	Square limit_top(0, MARGIN_TOP + 1, SCREEN_WIDTH, HEIGHT_DIVISION, "Limit Top");
-	Square limit_botton(0, SCREEN_HEIGHT - HEIGHT_DIVISION - MARGIN_BOTTON - 1, SCREEN_WIDTH, HEIGHT_DIVISION, "Limit Botton");
+	Square limit_top(0, Constant::VERTICAL_MARGIN, Constant::SCREEN_WIDTH, Constant::HEIGHT_DIVISION, "Upper limit");
+	Square limit_botton(0, Constant::SCREEN_HEIGHT - Constant::HEIGHT_DIVISION - Constant::VERTICAL_MARGIN, Constant::SCREEN_WIDTH, Constant::HEIGHT_DIVISION, "Lower limit");
 
 	// Audio Sample
 	al_reserve_samples(2);
@@ -156,7 +116,7 @@ int main(int argn, char** argv)
 	unsigned char key[ALLEGRO_KEY_MAX];
 	memset(key, 0, sizeof(key));
 
-	bool starter_menu = true;
+	int scene = 1;
 
 	UPATimer->startTimer();
 	while (continue_to_play)
@@ -166,46 +126,48 @@ int main(int argn, char** argv)
 		switch (event.type)
 		{
 			case ALLEGRO_EVENT_TIMER:
-				// Move players
-				if (!has_winner)
-				{
-					p1.move_player(key, &limit_top, &limit_botton);
-					p2.move_player(key, &limit_top, &limit_botton);
-				}
-
 				// Exist Game
 				if (key[ALLEGRO_KEY_ESCAPE])
 				{
 					continue_to_play = false;
 				}
 
-				// reload game, if it has a winner and space bar is pressed
-				if (has_winner && key[ALLEGRO_KEY_SPACE])
+				if (scene == 2)
 				{
-					has_winner = false;
-					p1.reset();
-					p2.reset();
-					ball.inverts_horizontal_direction();
+					// Move players
+					if (!has_winner)
+					{
+						p1.move_player(key, &limit_top, &limit_botton);
+						p2.move_player(key, &limit_top, &limit_botton);
+						ball.move_ball(&p1, &p2, &limit_top, &limit_botton, &collision_sample);
+					}
+					// reload game, if it has a winner and space bar is pressed
+					else if (key[ALLEGRO_KEY_SPACE])
+					{
+						has_winner = false;
+						p1.reset();
+						p2.reset();
+						ball.inverts_horizontal_direction();
+					}
 				}
-				//starter menu
-				else if (starter_menu && key[ALLEGRO_KEY_SPACE])
+				else if (scene == 1 && key[ALLEGRO_KEY_SPACE])
 				{
-					starter_menu = false;
+					scene++;
 				}
 
 				// Reset array of keys
 				for (unsigned int i = 0; i < ALLEGRO_KEY_MAX; i++)
 				{
-					key[i] &= KEY_SEEN;
+					key[i] &= Constant::KEY_SEEN;
 				}
+
 				draw = true;
-				
 				break;
 			case ALLEGRO_EVENT_KEY_DOWN:
-				key[event.keyboard.keycode] = KEY_SEEN | KEY_RELEASED;
+				key[event.keyboard.keycode] = Constant::KEY_SEEN | Constant::KEY_RELEASED;
 				break;
 			case ALLEGRO_EVENT_KEY_UP:
-				key[event.keyboard.keycode] &= KEY_RELEASED;
+				key[event.keyboard.keycode] &= Constant::KEY_RELEASED;
 				break;
 			case ALLEGRO_EVENT_DISPLAY_CLOSE:
 				continue_to_play = false;
@@ -226,14 +188,28 @@ int main(int argn, char** argv)
 		{
 			draw = false;
 			al_clear_to_color(ACBlack);
-			if (starter_menu)
+			
+			if(scene == 2)
+			{
+				draw_objects(&p1, &p2, &ball, &limit_top, &limit_botton, &ACWhite, font);
+
+				// draw winner msg, if the game has a winner
+				if (p1.get_score() >= Constant::MAX_SCORE)
+				{
+					draw_winner_msg(ACWhite, font, (Constant::Constant::HALF_SCREEN_WIDTH / 2), "Player 1 Win!!!");
+					has_winner = true;
+				}
+				else if (p2.get_score() >= Constant::MAX_SCORE)
+				{
+					draw_winner_msg(ACWhite, font, (Constant::HALF_SCREEN_WIDTH + (Constant::HALF_SCREEN_WIDTH / 2)), "Player 2 Win!!!");
+					has_winner = true;
+				}
+			}
+			else if (scene == 1)
 			{
 				draw_starter_menu(ACWhite, font);
 			}
-			else
-			{
-				draw_field(&p1, &p2, &ball, &limit_top, &limit_botton, ACWhite, font, has_winner, &collision_sample);
-			}
+
 			al_flip_display();
 		}
 	}

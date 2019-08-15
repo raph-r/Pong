@@ -105,3 +105,8 @@ bool Square::collided_on_right_of_other_square(const Square const * other_square
 	}
 	return false;
 }
+
+void Square::draw(ALLEGRO_COLOR * color)
+{
+	al_draw_filled_rectangle(this->top_left_x, this->top_left_y, (this->top_left_x + this->width), (this->top_left_y + this->height), *color);
+}

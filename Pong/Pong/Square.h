@@ -1,5 +1,7 @@
 #pragma once
 #include <memory>
+#include "allegro5/allegro.h"
+#include "allegro5/allegro_primitives.h"
 #include "Validate.h"
 #include <iostream>
 
@@ -181,4 +183,15 @@ class Square
 		 * @return True caso houve colisao. Caso contrario, False
 		*/
 		bool collided_on_right_of_other_square(const Square const * other_square);
+
+		/**
+		 * <EN>
+		 * Draw Snake
+		 * @param[in] color - Color that will be used to draw
+		 *
+		 * <PT-Br>
+		 * Desenha a Snake
+		 * @param[in] color - Cor que devera ser utilizada para desenhar
+		*/
+		void draw(ALLEGRO_COLOR * color);
 };

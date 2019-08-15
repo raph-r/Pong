@@ -8,14 +8,17 @@ const unsigned int Constant::KEY_SEEN = 1;
 const unsigned int Constant::KEY_RELEASED = 2;
 const unsigned int Constant::HORIZONTAL_MARGIN = 30;
 const unsigned int Constant::VERTICAL_MARGIN = 10;
+const unsigned int Constant::HEIGHT_DIVISION = ((Constant::SCREEN_HEIGHT - (Constant::VERTICAL_MARGIN * 2)) / 20);
+const unsigned int Constant::ACCELERATION = 3;
+const int Constant::MAX_SCORE = 10;
+const char Constant::MSG_PLAY_AGAIN[] = "Press Space to play again!";
+const char Constant::MSG_PLAY_GAME[] = "Press Space to play";
 
 const unsigned int Constant::BALL_WIDTH = 10;
 const unsigned int Constant::BALL_HEIGHT = 10;
 const unsigned int Constant::BALL_POSITION_X = Constant::HALF_SCREEN_WIDTH - (Constant::BALL_WIDTH / 2);
 const unsigned int Constant::BALL_POSITION_Y = Constant::HALF_SCREEN_HEIGHT - (Constant::BALL_HEIGHT / 2);
 const char Constant::BALL_NAME[] = "Ball";
-
-const unsigned int Constant::ACCELERATION = 3;
 
 const unsigned int Constant::PLAYER_WIDTH = 10;
 const unsigned int Constant::PLAYER_HEIGHT = 60;
