@@ -1,7 +1,6 @@
 #pragma once
 #include "Square.h"
 
-
 /**
  * <EN>
  * Represents a movable square

@@ -1,7 +1,7 @@
 #include "SMPlayer.h"
 
-SMPlayer::SMPlayer(const int& top_left_x, const int& top_left_y, const int& width, const int& height, const int& acceleration_x, const unsigned int& btn_to_up, const unsigned int& btn_to_down, const char * name)
-	:SMovable(top_left_x, top_left_y, width, height, acceleration_x, name)
+SMPlayer::SMPlayer(const int& top_left_x, const unsigned int& btn_to_up, const unsigned int& btn_to_down, const char * name)
+	:SMovable(top_left_x, Constant::PLAYER_POSITION_Y, Constant::PLAYER_WIDTH, Constant::PLAYER_HEIGHT, Constant::ACCELERATION, name)
 {
 	this->btn_to_up = std::move(btn_to_up);
 	this->btn_to_down = std::move(btn_to_down);
@@ -19,19 +19,20 @@ int SMPlayer::get_score() const
 	return this->score;
 }
 
-void SMPlayer::move_player(const unsigned char * keys, const Square * limit_top, const Square * limit_botton)
+void SMPlayer::move_player(const unsigned char * keys, const Square * upper_limit, const Square * lower_limit)
 {
-	if (keys[this->btn_to_up] && this->get_top_line() > limit_top->get_botton_line()) // limite superior
+	if (keys[this->btn_to_up] && !this->collided_on_botton_of_other_square(upper_limit)) // upper_limit
 	{
 		this->up();
 	}
-	if (keys[this->btn_to_down] && this->get_botton_line() < limit_botton->get_top_line()) // limite inferior
+	else if (keys[this->btn_to_down] && !this->collided_on_top_of_other_square(lower_limit)) // lower limit
 	{
 		this->down();
 	}
 }
 
-void SMPlayer::reset_score()
+void SMPlayer::reset()
 {
 	this->score = 0;
+	SMovable::reset_position();
 }

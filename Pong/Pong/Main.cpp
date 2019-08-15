@@ -134,8 +134,8 @@ int main(int argn, char** argv)
 	ALLEGRO_COLOR ACWhite = al_map_rgba_f(1, 1, 1, 1);
 
 	//Players 
-	SMPlayer p1(MARGIN_LEFT + 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, ALLEGRO_KEY_W, ALLEGRO_KEY_S, "Player 1");
-	SMPlayer p2(SCREEN_WIDTH - MARGIN_RIGHT - 1, HALF_HEIGHT - (60 / 2), 10, 60, 4, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, "Player 2");
+	SMPlayer p1(Constant::PLAYER_1_POSITION_X, ALLEGRO_KEY_W, ALLEGRO_KEY_S, "Player 1");
+	SMPlayer p2(Constant::PLAYER_2_POSITION_X, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, "Player 2");
 
 	//ball
 	SMBall ball;
@@ -183,8 +183,8 @@ int main(int argn, char** argv)
 				if (has_winner && key[ALLEGRO_KEY_SPACE])
 				{
 					has_winner = false;
-					p1.reset_score();
-					p2.reset_score();
+					p1.reset();
+					p2.reset();
 					ball.inverts_horizontal_direction();
 				}
 				//starter menu

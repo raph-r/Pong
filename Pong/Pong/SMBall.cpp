@@ -5,7 +5,7 @@ SMBall::SMBall():SMovable(
 	Constant::BALL_POSITION_Y,
 	Constant::BALL_WIDTH,
 	Constant::BALL_HEIGHT,
-	Constant::BALL_ACCELERATION,
+	Constant::ACCELERATION,
 	Constant::BALL_NAME
 ){}
 
