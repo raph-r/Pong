@@ -32,7 +32,7 @@ void SMBall::move_ball()
 	}
 }
 
-void SMBall::move_ball(SMPlayer * const p1, SMPlayer * const p2, Square const * const limit_top, Square const * const limit_botton, ASample const * const sample)
+void SMBall::move_ball(SMPlayer * const p1, SMPlayer * const p2, Square const * const upper_limit, Square const * const lower_limit, ASample const * const sample)
 {
 	// player collision
 	if (this->collided_on_right_of_other_square(p1) || this->collided_on_left_of_other_square(p2))
@@ -43,7 +43,7 @@ void SMBall::move_ball(SMPlayer * const p1, SMPlayer * const p2, Square const * 
 	}
 	
 	// square limits collision
-	if (this->collided_on_top_of_other_square(limit_botton) || this->collided_on_botton_of_other_square(limit_top))
+	if (this->collided_on_top_of_other_square(lower_limit) || this->collided_on_botton_of_other_square(upper_limit))
 	{
 		this->inverts_vertical_direction();
 		sample->play_sample();

@@ -159,8 +159,8 @@ int main(int argn, char** argv)
 	SMBall ball;
 
 	//limits
-	Square limit_top(0, Constant::VERTICAL_MARGIN, Constant::SCREEN_WIDTH, Constant::HEIGHT_DIVISION, "Upper limit");
-	Square limit_botton(0, Constant::SCREEN_HEIGHT - Constant::HEIGHT_DIVISION - Constant::VERTICAL_MARGIN, Constant::SCREEN_WIDTH, Constant::HEIGHT_DIVISION, "Lower limit");
+	Square upper_limit(0, Constant::VERTICAL_MARGIN, Constant::SCREEN_WIDTH, Constant::HEIGHT_DIVISION, "Upper limit");
+	Square lower_limit(0, Constant::SCREEN_HEIGHT - Constant::HEIGHT_DIVISION - Constant::VERTICAL_MARGIN, Constant::SCREEN_WIDTH, Constant::HEIGHT_DIVISION, "Lower limit");
 
 	// Audio Sample
 	al_reserve_samples(2);
@@ -206,9 +206,9 @@ int main(int argn, char** argv)
 						else
 						{
 							// Move objects
-							p1.move_player(key, &limit_top, &limit_botton);
-							p2.move_player(key, &limit_top, &limit_botton);
-							ball.move_ball(&p1, &p2, &limit_top, &limit_botton, &collision_sample);
+							p1.move_player(key, &upper_limit, &lower_limit);
+							p2.move_player(key, &upper_limit, &lower_limit);
+							ball.move_ball(&p1, &p2, &upper_limit, &lower_limit, &collision_sample);
 
 							// Update game score
 							if (update_score(&ball, &p1, &p2))
@@ -264,7 +264,7 @@ int main(int argn, char** argv)
 			// Draw second scene
 			if(scene == 2)
 			{
-				draw_objects(&p1, &p2, &ball, &limit_top, &limit_botton, &ACWhite, SPFont_24);
+				draw_objects(&p1, &p2, &ball, &upper_limit, &lower_limit, &ACWhite, SPFont_24);
 				// if has a winner, draw msg
 				if (p1_winner)
 				{

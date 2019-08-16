@@ -64,18 +64,18 @@ class SMBall : public SMovable
 		 * Verify if SMBall collided with some object and change the directions of your movements
 		 * @param[in] p1 - Pointer to Player 1
 		 * @param[in] p2 - Pointer to Player 2
-		 * @param[in] top_limit - Pointer to Object that represents the top limit of screen
-		 * @param[in] botton_limit - Pointer to Object that represents the botton limit of screen
+		 * @param[in] upper_limit - Pointer to Object that represents the top limit of screen
+		 * @param[in] lower_limit - Pointer to Object that represents the botton limit of screen
 		 * @param[in] sample - Pointer to sample that will be played when some collision happens
 		 * <PT-Br>
 		 * Verifica se SMBall colidiu com algum objeto e altera a direcao dos movimentos, de acordo com cada resultado
 		 * @param[in] p1 - Ponteiro para Player 1
 		 * @param[in] p2 - Ponteiro para Player 2
-		 * @param[in] top_limit - Ponteiro para o objeto que representa o limite superior da tela
-		 * @param[in] botton_limit - Ponteiro para o objeto que representa o limite inferior da tela
+		 * @param[in] upper_limit - Ponteiro para o objeto que representa o limite superior da tela
+		 * @param[in] lower_limit - Ponteiro para o objeto que representa o limite inferior da tela
 		 * @param[in] sample - Ponteiro para o som que devera ser tocado, caso a SMBall tenha colidido com alguma coisa
 		*/
-		void move_ball(SMPlayer * const p1, SMPlayer * const p2, Square const * const top_limit, Square const * const botton_limit, ASample const * const sample);
+		void move_ball(SMPlayer * const p1, SMPlayer * const p2, Square const * const upper_limit, Square const * const lower_limit, ASample const * const sample);
 
 		/**
 		 * <EN>
