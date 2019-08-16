@@ -9,12 +9,48 @@
 #include "SMPlayer.h"
 #include "SMBall.h"
 
+/**
+ * <EN>
+ * Draws the winner's message
+ * @param[in] color - Color that will be used to draw
+ * @param[in] font - ATTFFont that will be used to draw
+ * @param[in] winner_msg - msg that will be draw
+ * @param[in] middle_of_winner_side - Position X, that represents the middle of winner's side
+ *
+ * <PT-Br>
+ * Desenha a mensagem de ganhador
+ * @param[in] color - Cor que devera ser utilizada para desenhar
+ * @param[in] font - ATTFFont que sera utilizada para a escrita
+ * @param[in] winner_msg - mensagem que será desenhada
+ * @param[in] middle_of_winner_side - Posicao X, que representa o meio do lado do vencedor
+*/
 void draw_winner_msg(ALLEGRO_COLOR * color, const std::shared_ptr<const ATTFFont> font, const char * const winner_msg, const int & middle_of_winner_side)
 {
 	al_draw_textf(font->getFont(), *color, middle_of_winner_side, Constant::HALF_SCREEN_HEIGHT - al_get_font_line_height(font->getFont()), ALLEGRO_ALIGN_CENTER, winner_msg);
 	al_draw_textf( font->getFont(), *color, middle_of_winner_side, Constant::HALF_SCREEN_HEIGHT, ALLEGRO_ALIGN_CENTER, Constant::MSG_PLAY_AGAIN);
 }
 
+/**
+ * <EN>
+ * Draws all objects of game. Including game score
+ * @param[in] p1 - Pointer to Player 1
+ * @param[in] p2 - Pointer to Player 2
+ * @param[in] ball - SMBall that represents the ball of game
+ * @param[in] upper_limit - Pointer to Object that represents the top limit of screen
+ * @param[in] lower_limit - Pointer to Object that represents the botton limit of screen
+ * @param[in] color - Color that will be used to draw
+ * @param[in] font - ATTFFont that will be used to draw
+ *
+ * <PT-Br>
+ * Desenha todos os objetos do jogo. Incluindo o placar do jogo
+ * @param[in] p1 - Ponteiro para Player 1
+ * @param[in] p2 - Ponteiro para Player 2
+ * @param[in] ball - SMBall que representa a bola do jogo
+ * @param[in] upper_limit - Ponteiro para o objeto que representa o limite superior da tela
+ * @param[in] lower_limit - Ponteiro para o objeto que representa o limite inferior da tela
+ * @param[in] color - Cor que devera ser utilizada para desenhar
+ * @param[in] font - ATTFFont que sera utilizada para a escrita
+*/
 void draw_objects(SMPlayer * p1, SMPlayer * p2, SMBall * ball, Square * upper_limit, Square * lower_limit, ALLEGRO_COLOR * color, const std::shared_ptr<const ATTFFont> font)
 {
 	upper_limit->draw(color);
@@ -34,21 +70,47 @@ void draw_objects(SMPlayer * p1, SMPlayer * p2, SMBall * ball, Square * upper_li
 	al_draw_textf(font->getFont(), *color, Constant::HALF_SCREEN_WIDTH + 60, 60 - (al_get_font_line_height(font->getFont()) / 2), ALLEGRO_ALIGN_CENTER, "%u", p2->get_score());
 }
 
-void draw_starter_menu(const ALLEGRO_COLOR& color, const std::shared_ptr<const ATTFFont> font)
+/**
+ * <EN>
+ * Draw the initial scene of game
+ * @param[in] color - Color that will be used to draw
+ * @param[in] font - ATTFFont that will be used to draw
+ *
+ * <PT-Br>
+ * Desenha a cena inicial do jogo
+ * @param[in] color - Cor que devera ser utilizada para desenhar
+ * @param[in] font - ATTFFont que sera utilizada para desenhar
+*/
+void draw_initial_scene(const ALLEGRO_COLOR& color, const std::shared_ptr<const ATTFFont> font)
 {
 	al_draw_textf(font->getFont(), color, Constant::HALF_SCREEN_WIDTH, Constant::HALF_SCREEN_HEIGHT - (al_get_font_line_height(font->getFont()) / 2), ALLEGRO_ALIGN_CENTER, Constant::MSG_PLAY_GAME);
 }
 
+/**
+ * <EN>
+ * Verify if someone scored and add a point for who scored
+ * @param[in] ball - SMBall that represents the ball of game
+ * @param[in] p1 - Pointer to Player 1
+ * @param[in] p2 - Pointer to Player 2
+ * @return True if someone scored. Otherwise false
+ *
+ * <PT-Br>
+ * Verifica se foi efetuado algum gol no jogo e adiciona o ponto ao marcador
+ * @param[in] ball - SMBall que representa a bola do jogo
+ * @param[in] p1 - Ponteiro para Player 1
+ * @param[in] p2 - Ponteiro para Player 2
+ * @return True caso tenha sido efetuado um gol. Caso contrario False
+*/
 bool update_score(const SMBall * ball, SMPlayer * const p1, SMPlayer * const p2)
 {
-	//player 1 gol
-	if (ball->get_right_line() >= p2->get_right_line())
+	//Player 1 goal
+	if (ball->pos_is_between_horizontal_borders(Constant::SCREEN_WIDTH - Constant::HORIZONTAL_MARGIN))
 	{
 		p1->add_score();
 		return true;
 	}
-	//player 2 gol
-	else if (ball->get_left_line() <= p1->get_left_line())
+	//Player 2 goal
+	else if (ball->pos_is_between_horizontal_borders(Constant::HORIZONTAL_MARGIN))
 	{
 		p2->add_score();
 		return true;
@@ -216,7 +278,7 @@ int main(int argn, char** argv)
 			// Draw first scene
 			else if (scene == 1)
 			{
-				draw_starter_menu(ACWhite, SPFont_24);
+				draw_initial_scene(ACWhite, SPFont_24);
 			}
 
 			al_flip_display();
